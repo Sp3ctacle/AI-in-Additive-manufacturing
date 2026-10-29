@@ -1,0 +1,51 @@
+audit_idx,group,specimen_id,micrograph_id,tile_x,tile_y,pore_percent_otsu,density,classification,is_resin_or_failure,notes
+0,Highest Porosity,575,575_2,7168,10240,99.6711254119873,99.904,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+1,Highest Porosity,628,628,3072,2048,99.65982437133788,99.577,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+2,Highest Porosity,188,188,5120,11264,99.64675903320312,98.621,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+3,Highest Porosity,801,801,3072,2048,99.64227676391602,99.745,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+4,Highest Porosity,814,814,6144,10240,99.62396621704102,99.479,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+5,Highest Porosity,202,202,4096,10240,99.56121444702148,99.451,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+6,Highest Porosity,801,801,4096,2048,99.47061538696288,99.745,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+7,Highest Porosity,500,500,7168,2048,99.37505722045898,99.708,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+8,Highest Porosity,813,813,4096,8192,99.36747550964355,99.545,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+9,Highest Porosity,30,30,9216,9216,99.32842254638672,99.989,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+10,Highest Porosity,200,200,3072,6144,99.20248985290527,99.816,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+11,Highest Porosity,814,814,3072,4096,99.19543266296388,99.479,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+12,Highest Porosity,541,541,2048,9216,99.19490814208984,99.944,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+13,Highest Porosity,191,191,7168,9216,99.16954040527344,99.38,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+14,Highest Porosity,191,191,8192,8192,99.08080101013184,99.38,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+15,Highest Porosity,252,252,10240,10240,99.01566505432127,99.776,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+16,Highest Porosity,683,683_2,6144,9216,99.00035858154295,99.946,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+17,Highest Porosity,188,188,3072,11264,98.92692565917967,98.621,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+18,Highest Porosity,188,188,4096,11264,98.9267349243164,98.621,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+19,Highest Porosity,772,772,6144,9216,98.7466812133789,99.601,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+20,Highest Porosity,178,178_2,3072,8192,98.73771667480467,99.472,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+21,Highest Porosity,188,188,3072,2048,98.7234592437744,98.621,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+22,Highest Porosity,814,814,3072,3072,98.60472679138184,99.479,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+23,Highest Porosity,194,194,3072,10240,98.4273910522461,99.952,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+24,Highest Porosity,195,195,3072,11264,98.35071563720705,99.972,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+25,Highest Porosity,191,191,10240,10240,98.33321571350098,99.38,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+26,Highest Porosity,30,30,1024,11264,98.30775260925292,99.989,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+27,Highest Porosity,809,809,3072,9216,98.2722282409668,99.881,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+28,Highest Porosity,812,812,10240,5120,98.1837272644043,99.643,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+29,Highest Porosity,178,178_2,4096,10240,98.17299842834473,99.472,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+30,Low Density (<80%),328,328_2,5120,4096,36.783742904663086,63.604,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+31,Low Density (<80%),491,491,4096,10240,25.5709171295166,74.526,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+32,Low Density (<80%),756,756,9216,2048,34.13734436035156,75.221,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+33,Low Density (<80%),572,572_2,5120,10240,20.673274993896484,78.502,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+34,Low Density (<80%),449,449_2,9216,2048,51.87125205993652,76.087,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+35,Low Density (<80%),466,466,8192,10240,32.74545669555664,53.263,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+36,Low Density (<80%),449,449_2,9216,7168,33.435821533203125,76.087,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+37,Low Density (<80%),140,140,3072,9216,28.388595581054688,64.196,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+38,Low Density (<80%),389,389,3072,7168,35.77876091003418,67.705,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+39,Low Density (<80%),615,615_2,4096,3072,5.064725875854492,73.424,Real Metal Porosity,False,Real porous network
+40,Low Density (<80%),140,140,5120,2048,23.50726127624512,64.196,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+41,Low Density (<80%),112,112_2,6144,5120,32.44428634643555,66.997,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+42,Low Density (<80%),257,257,8192,3072,41.08867645263672,78.722,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+43,Low Density (<80%),612,612,6144,6144,0.0632762908935546,42.753,Real Metal Porosity,False,Real porous network
+44,Low Density (<80%),375,375,4096,3072,12.884855270385742,78.792,Real Metal Porosity,False,Real porous network
+45,Low Density (<80%),370,370,5120,7168,31.262874603271484,67.746,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+46,Low Density (<80%),328,328_2,8192,7168,31.22763633728028,63.604,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+47,Low Density (<80%),78,78,5120,4096,25.46525001525879,74.908,Real Metal Porosity,False,Genuine macroscopic void / lack-of-fusion cavity
+48,Low Density (<80%),181,181_2,5120,7168,19.90385055541992,74.672,Real Metal Porosity,False,Real porous network
+49,Low Density (<80%),375,375,4096,6144,17.597150802612305,78.792,Real Metal Porosity,False,Real porous network
