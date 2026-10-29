@@ -257,3 +257,4 @@ def bootstrap_ci_by_specimen(
     ci_upper = float(np.percentile(bootstrap_metrics, 100 * (1.0 - alpha / 2.0)))
 
     return ci_lower, ci_upper, point_estimate
+

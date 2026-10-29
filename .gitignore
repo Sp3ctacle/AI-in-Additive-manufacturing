@@ -13,10 +13,11 @@ __pycache__/
 OLD project/
 models/
 
-# Ignore generated images across outputs
+# Ignore generated images and intermediate checkpoints across outputs
 outputs/**/previews/
 outputs/**/tiles/
 outputs/**/masks/
+outputs/**/checkpoints/
 *.tif
 *.tiff
 *.jpg

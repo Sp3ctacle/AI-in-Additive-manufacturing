@@ -106,3 +106,4 @@ def get_gradcam_layer(model: nn.Module) -> Tuple[nn.Module, str]:
         return last_conv, last_name
 
     raise ValueError("Could not automatically locate a convolutional stage for Grad-CAM in this model.")
+
