@@ -18,6 +18,7 @@ outputs/**/previews/
 outputs/**/tiles/
 outputs/**/masks/
 outputs/**/checkpoints/
+outputs/**/*.npy
 *.tif
 *.tiff
 *.jpg
