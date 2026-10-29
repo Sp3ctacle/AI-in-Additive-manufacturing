@@ -1,0 +1,37 @@
+# Raw data and image archives
+data/
+*.zip
+*.pth
+*.pt
+*.db
+Thumbs.db
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore old project archives
+OLD project/
+models/
+
+# Ignore generated images across outputs
+outputs/**/previews/
+outputs/**/tiles/
+outputs/**/masks/
+*.tif
+*.tiff
+*.jpg
+*.jpeg
+*.png
+
+# Keep reports, metadata CSVs and JSONs in outputs
+!outputs/**/*.csv
+!outputs/**/*.json
+!outputs/**/*.md
+
+# System & IDE
+.vscode/
+.idea/
+.DS_Store
+
+# Logs
+logs/*.log

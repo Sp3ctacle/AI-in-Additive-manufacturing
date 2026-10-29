@@ -1,0 +1,12 @@
+filename,file_path,size_bytes,published_size,expected_md5,computed_md5,status,match
+Parameter_Combinations.csv,C:\Users\siddh\Downloads\Parameter_Combinations.csv,46349,46.3 kB,a9637a00462e14794c73c2c45cfb3d0b,a9637a00462e14794c73c2c45cfb3d0b,MATCH,True
+Labeled_Defects.zip,C:\Users\siddh\Downloads\Labeled_Defects.zip,3874133,3.9 MB,67e39a4116dfd90f5a43d9463bfad3d1,67e39a4116dfd90f5a43d9463bfad3d1,MATCH,True
+Model_Application_Micrographs.zip,C:\Users\siddh\Downloads\Model_Application_Micrographs.zip,596625439,596.6 MB,9178cea1fc7cc7836f8322544218a090,9178cea1fc7cc7836f8322544218a090,MATCH,True
+1-84.zip,C:\Users\siddh\Downloads\1-84.zip,5348196660,5.3 GB,2f00c5aff1b1fc750b43bb44edf63243,2f00c5aff1b1fc750b43bb44edf63243,MATCH,True
+85-174.zip,C:\Users\siddh\Downloads\85-174.zip,5647776542,5.6 GB,2a7492533856c0772cc63f4d0940972c,2a7492533856c0772cc63f4d0940972c,MATCH,True
+175-267.zip,C:\Users\siddh\Downloads\175-267.zip,6081871813,6.1 GB,0bf5c42d74fd70b8f4c04c240502165f,0bf5c42d74fd70b8f4c04c240502165f,MATCH,True
+268-363.zip,C:\Users\siddh\Downloads\268-363.zip,6099424398,6.1 GB,0a3778bf8bbe9f9f557ee2a9c45245ab,0a3778bf8bbe9f9f557ee2a9c45245ab,MATCH,True
+364-462.zip,C:\Users\siddh\Downloads\364-462.zip,6491544442,6.5 GB,1264a1288046a9a5c3814f419c3e2cb2,1264a1288046a9a5c3814f419c3e2cb2,MATCH,True
+463-570.zip,C:\Users\siddh\Downloads\463-570.zip,7264616421,7.3 GB,75d4b062bf63223853272722e5bc3a02,75d4b062bf63223853272722e5bc3a02,MATCH,True
+571-606.zip,C:\Users\siddh\Downloads\571-606.zip,7794115777,7.8 GB,6f4ed604d581f61b28fe6d0b3eded73d,6f4ed604d581f61b28fe6d0b3eded73d,MATCH,True
+697-816.zip,C:\Users\siddh\Downloads\697-816.zip,7552873898,7.6 GB,0ff8f321e7aade274141940ffc6dc4f3,0ff8f321e7aade274141940ffc6dc4f3,MATCH,True
