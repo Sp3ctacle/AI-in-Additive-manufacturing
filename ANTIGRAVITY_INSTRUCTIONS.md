@@ -1,7 +1,7 @@
 ANTIGRAVITY PROMPT PACKAGE: FINAL MODEL ON THE Ti-6Al-4V DATASET (Zenodo 8303011)
-Author: Siddharth | Version 3, 29 Oct 2026 (fresh-folder edition)
+Author: Siddharth | Version 4, 30 Oct 2026 (fresh-folder edition, with follow-ups and Phase 10)
 ======================================================================
- 
+
 HOW TO USE
 - This package runs in a NEW, EMPTY project folder. The old project folder is
   kept only as an archive: no script in this package imports, calls or reads
@@ -13,21 +13,38 @@ HOW TO USE
 - Every phase writes only to its own folder under outputs/phaseN/.
 - After each phase, upload the phase's JSON/CSV/PNG outputs to
   claude_paper_package/ti64/ in the Claude project so the paper can be updated.
-- STRICT GATE APPROVAL RULE: DO NOT RUN any future phases before first
-  sending the user their outputs and asking for approval on the gate passes.
- 
+- STRICT GATE APPROVAL RULE: DO NOT RUN any future phases before first sending
+  the user their outputs and asking for approval on the gate passes.
+
 Dataset: Zenodo 8303011, "PBF-LB/M Ti6Al4V micrographs and labelled
 manufacturing defects" (CC BY 4.0). Verified facts are recorded under PHASE 0.
- 
- 
+
+STATUS AND RUN ORDER (30 Oct 2026)
+  Done:     Part 0, Phase 0, Phase 1, Phase 1b, Phase 2, Phase 3
+  Running:  Phase 4 (finishes ~00:05 on 31 Oct)
+  Next, in this order:
+    3b and 4b (no training)        ~0.5 h GPU
+    5  Robustness                  1.5-3 h
+    6  Pore types                  ~1 h
+    7  Generalisation              ~6 h (with 15-epoch fine-tuning)
+    8  Explainability              <1 h
+    10 Assessment system           3.5-4 h
+    9  Consolidation (run LAST, after Phase 10)
+  Remaining GPU time: about 16-18 h.
+
+Project focus (from the supervisor): a general system that measures porosity
+and identifies the defects behind it. Core phases: 3, 5, 6, 7, 10. Phase 4 is
+a secondary result; Phase 8 supports trust in the model.
+
+
 ######################################################################
 PART A: GLOBAL RULES (paste first; applies to every phase)
 ######################################################################
- 
+
 You are working on a research codebase. A previous version produced several
 silent errors. Follow every rule below in every script you write. If a rule
 cannot be followed, stop and say so instead of working around it.
- 
+
 A1. Specimen grouping is absolute.
     - Every image, tile and crop carries a specimen_id. All cross-validation
       uses GroupKFold or StratifiedGroupKFold on specimen_id.
@@ -35,38 +52,38 @@ A1. Specimen grouping is absolute.
       and in validation is disjoint. Assert the same for tiles and crops.
     - Never use random KFold except in a run explicitly labelled
       "leakage demonstration".
- 
+
 A2. Never select anything on the reported validation fold.
     - checkpoint_mode = "last" (weights after the final epoch).
     - If early stopping or hyper-parameter tuning is needed, carve an inner
       validation split from the TRAINING specimens only.
- 
+
 A3. Fit every data-dependent transform on training folds only.
     - Target scalers, log transforms' constants, threshold calibrations,
       field-area constants, normalisation statistics: fit on train, apply to val.
- 
+
 A4. One preprocessing function for everything.
     - The same function in ti64/common.py (cv2.INTER_AREA resizing, same crop,
       same colour conversion) is used for training, validation, inference,
       robustness and XAI. No PIL in one place and OpenCV in another.
- 
+
 A5. No geometric distortion.
     - Never resize a non-square image to a square. Use square tiles cut from
       native resolution, or aspect-preserving resize with padding.
- 
+
 A6. The label must describe exactly the pixels the network sees.
     - If a target is computed on a region, the input is that same region.
       No centre crop after labelling; no input wider than the labelled field.
- 
+
 A7. No hard-coded result numbers.
     - Every number in any output table or JSON is computed in the script that
       writes it, from saved predictions. Baselines from other runs are loaded
       from their JSON files by path, never typed in. Log the source path.
- 
+
 A8. Physical units.
     - Pixel size is 0.55812 um/px at native resolution (Phase 0). Report
       areas in um^2, lengths in um, porosity in %, energy density in J/mm^3.
- 
+
 A9. Statistics.
     - Report pooled OOF metrics AND every per-fold value.
     - Use paired t-tests across folds; also report the Wilcoxon p, noting that
@@ -75,20 +92,20 @@ A9. Statistics.
       never over images or tiles.
     - Never write "beats" or "outperforms" unless the CI of the difference
       excludes zero. Report ties as ties.
- 
+
 A10. Report every result whichever way it goes. No result is dropped because
      it is negative. Every phase ends with a plain-language verdict.
- 
+
 A11. Reproducibility.
      - Seed 42 for python, numpy, torch (and cudnn.deterministic where
        feasible). Save the full config, git commit hash, package versions,
        GPU model and run time into each output folder as run_info.json.
      - Save a manifest (file path, SHA-256, specimen_id) of every image used.
- 
+
 A12. Process-derived labels only for regimes.
      - Energy regimes come from process parameters only, never from measured
        or predicted porosity.
- 
+
 A13. Explainability rules.
      - Grad-CAM is the primary method. Integrated Gradients only with an
        in-distribution baseline (a pore-free matrix image), and only if its
@@ -96,28 +113,38 @@ A13. Explainability rules.
      - Deletion tests fill pixels with the matrix grey value converted into
        normalised input space.
      - Masks used for grounding are cropped and resized exactly like the input.
- 
+
 A14. Fresh codebase only.
      - Never import, copy or call code from the old project folder. All shared
        code lives in ti64/ in this project. If something from the old project
        is needed, re-implement it here and say so.
      - Raw data copied from the old folder is read-only input.
- 
+
 A15. Long jobs run in the background.
      - Any job longer than about 10 minutes is launched as a background
        process writing to logs/<phase>_<name>.log, with progress printed at
        least every few minutes. Resume from saved per-fold outputs if a run
        is interrupted; never silently restart from scratch.
- 
- 
+
+A16. Data loading (learned in Phase 3).
+     - Train from tiles pre-resized to network input size and cached as
+       uint8 memory-mapped arrays, verified bit-identical to on-the-fly
+       ti64.common.preprocess output.
+     - DataLoader: num_workers 4-8, persistent_workers=True, pin_memory=True,
+       prefetch_factor=4, cv2.setNumThreads(1) in worker_init_fn, workers
+       seeded 42 + worker_id. Normalise on the GPU. non_blocking=True.
+     - Never change batch size, learning rate, epochs or augmentation in the
+       middle of a phase; such a change requires rerunning every fold.
+
+
 ######################################################################
-PART 0: FRESH PROJECT SETUP (run once, before Phase 1)
+PART 0: FRESH PROJECT SETUP  (COMPLETED)
 ######################################################################
- 
+
 Context: This is a new, empty project folder. The old project folder is
 archived at OLD_PROJECT_PATH (fill in the real path). Nothing from its code is
 reused (rule A14).
- 
+
 Task:
 1. Create this layout and initialise git:
      data/ti64_raw/          the 11 Zenodo files, unmodified
@@ -163,14 +190,14 @@ Task:
 5. Write tests/test_common.py: assert preprocess is deterministic, folds are
    disjoint on a toy example, metrics match sklearn, and the model returns the
    right output shape. Run it.
- 
+
 GATE P0: tests pass; MD5 checks pass after the copy; git commit created.
- 
- 
+
+
 ######################################################################
 PHASE 0: DATASET VERIFICATION  (COMPLETED; do not rerun)
 ######################################################################
- 
+
 Recorded facts (from outputs/phase0/phase0_report.md). Use them; do not
 re-derive them:
 - All 11 files match the Zenodo MD5 checksums; 0 of 774 micrographs corrupt.
@@ -192,19 +219,19 @@ re-derive them:
   offset must be verified (P1).
 - Model_Application_Micrographs.zip: 10 exact duplicates of numbered-archive
   images. Excluded everywhere.
- 
- 
+
+
 ######################################################################
-PHASE 1: PRE-CHECKS, SPECIMEN MASKING, TILING AND LABELS
+PHASE 1: PRE-CHECKS, SPECIMEN MASKING, TILING AND LABELS  (COMPLETED)
 ######################################################################
- 
+
 Context: Micrographs are ~13,600 x 13,300 px at 0.558 um/px with dark resin
 borders, stitching seams and vignetting. Labels are generated by us and must
 describe exactly the tile the network sees (A6).
- 
+
 Task: Write scripts/phase1_tiles_labels.py using ti64/common.py. Output
 outputs/phase1/. Start with the pre-checks and stop if any pre-check gate fails.
- 
+
 PRE-CHECKS (report in a section "Phase 1 pre-checks"):
 P1. Crop-to-parent verification (off-by-one and pixel scale): for 10 crops per
     defect class (30 total), locate each crop inside candidate parents
@@ -221,7 +248,7 @@ P3. Density: report units, range, missing count and the measurement method
     Save specimen_density.csv. It is used as an independent check in Phase 2.
 P4. Pore sizes: from Ti6Al4V_local_defect_features.csv, report equivalent-
     diameter percentiles (5th, 50th, 95th) per class in um.
- 
+
 MAIN STEPS:
 1. Specimen mask: on a 1/8-scale copy, separate metal from resin (Otsu,
    largest connected component, hole filling), upscale, then erode by 200 um
@@ -250,19 +277,43 @@ MAIN STEPS:
 6. Specimen labels: area-weighted porosity over all tiles of a specimen.
 7. tiles_index.csv: tile_path, micrograph_id, specimen_id, x, y, P, v, h, t,
    E_d, TE, density, all labels.
- 
+
 GATE 1:
 - P1-P4 reported; P1 and P2 gates passed.
 - Every tile has a specimen_id; tile counts per specimen reported.
 - QC: if more than 10% of the 50 QC tiles look wrong, or any seam or resin
   edge is labelled as pore, stop and propose a fix.
 - Report the distribution of tile pore% (expect skewed and zero-inflated).
- 
- 
+
+
 ######################################################################
-PHASE 2: SPLITS, LABEL VALIDATION AND BASELINES (no CNN yet)
+PHASE 1b: PHASE 1 FOLLOW-UP CHECKS  (COMPLETED)
 ######################################################################
- 
+
+Write scripts/phase1b_checks.py, outputs to outputs/phase1b/. Fix and verify
+only what is listed.
+1. P1 contrast: peak correlation for BOTH candidate parents ({img}, {img-1})
+   for the 30 crops, the margin between them, and the one mismatch explained.
+   State honestly that the absolute 0.9 threshold was not met (mean 0.817).
+2. Flat-field check (background sigma >= 10 x largest pore radius): on the 100
+   highest-pore% tiles and 100 random tiles compare (a) current flat-field,
+   (b) a rule-compliant background, (c) none. If (a) under-counts large pores
+   by > 10% relative, regenerate labels with (b).
+3. The 39 specimens with micrographs but no tiles: reason for each, density and
+   E_d; Mann-Whitney test of their density vs retained specimens; fix if they
+   are systematically more porous.
+4. Extreme-tile QC: 30 highest-pore% tiles and 20 tiles from specimens with
+   density < 80%, with overlays; real porosity or masking failure?
+5. Fraction of pores and pore area below 3 network pixels at 256 and 512 px;
+   add count and roundness targets restricted to pores >= 10 um.
+6. Disk use of outputs/phase1/.
+GATE 1b: all reported; tiles_index.csv SHA-256 recorded.
+
+
+######################################################################
+PHASE 2: SPLITS, LABEL VALIDATION AND BASELINES  (COMPLETED)
+######################################################################
+
 Task: Write scripts/phase2_splits_baselines.py. Output outputs/phase2/.
 1. Folds: StratifiedGroupKFold(n_splits=5) on specimen_id, stratified by
    E_d tertile, seed 42. Save folds.json (specimen_id -> fold). Assert
@@ -285,15 +336,15 @@ Task: Write scripts/phase2_splits_baselines.py. Output outputs/phase2/.
      exponential fit on training folds).
 5. Leakage demonstration: Extra Trees inverse baseline with random KFold over
    tiles; report the random-minus-grouped R^2 gap.
- 
+
 GATE 2: folds.json passes the disjointness assertion; baselines.json written
 with per-fold values; label-check verdict stated.
- 
- 
+
+
 ######################################################################
-PHASE 3: FORWARD MODEL (porosity and morphology from raw tiles)
+PHASE 3: FORWARD MODEL (porosity and morphology from raw tiles)  (COMPLETED)
 ######################################################################
- 
+
 Task: Write scripts/phase3_forward.py. Output outputs/phase3/.
 1. Model: ti64.model.build_model(n_outputs=3); targets [pore%, log N,
    Roundness_avg]. Transform pore% with sqrt or log1p before standardisation
@@ -311,15 +362,15 @@ Task: Write scripts/phase3_forward.py. Output outputs/phase3/.
    with paired tests (A7, A9).
 6. Resolution check: repeat at two other input sizes (one smaller, one larger)
    with the same tiles and effective batch size. Report the trend per target.
- 
+
 GATE 3: plain verdict on whether the CNN beats the calibrated threshold and the
 pixel-fraction baseline on pore% at specimen level, with CIs.
- 
- 
+
+
 ######################################################################
-PHASE 4: INVERSE PROCESS REGRESSION
+PHASE 4: INVERSE PROCESS REGRESSION  (RUNNING)
 ######################################################################
- 
+
 Task: Write scripts/phase4_inverse.py. Output outputs/phase4/.
 1. Targets: E_d, P, v, h, t (each standardised). If Ti-6Al-4V constants
    (absorptivity, diffusivity, beam radius, rho, c_p, T_m) can be sourced,
@@ -334,15 +385,52 @@ Task: Write scripts/phase4_inverse.py. Output outputs/phase4/.
    if available) and P, v, h, t.
 6. Leakage demonstration: random KFold over tiles (labelled as such); report
    the gap.
- 
+
 GATE 4: plain verdict on whether micrographs predict process state in this
 dataset, and whether this exceeds the porosity-only baseline.
- 
- 
+
+
+######################################################################
+PHASE 3b: FAIR BASELINE AND DENSITY ANALYSIS  (COMPLETED)
+######################################################################
+
+Output outputs/phase3b/.
+1. Fair baseline: per-tile Otsu with flat-field and the same minimum-area filter
+   as the label pipeline, computed on the 256 px network-input tile (min-area
+   scaled). Specimen and tile MAE/R2 vs labels; paired bootstrap CI vs the CNN.
+2. Density disagreement: Bland-Altman of label pore% vs (100 - Archimedes
+   density) by density bin (<90, 90-98, 98-99.5, >99.5%); Spearman within the
+   >98% group; the 10 largest disagreements with micrograph overlays and likely
+   causes (section location vs bulk, open porosity, delamination).
+3. >=10 um count and roundness targets: ridge head on frozen Phase 3 backbone
+   features, fit per fold on training specimens only; OOF metrics.
+4. Rewrite the Gate 3 verdict: (a) the CNN reproduces the label pipeline at
+   specimen level; (b) result vs the fair baseline; (c) parity with the labels
+   against Archimedes density. Remove "proves ... physical void fraction".
+
+
+######################################################################
+PHASE 4b: INVERSE-RESULT DIAGNOSTICS  (no training; after Phase 4)
+######################################################################
+
+Output outputs/phase4b/.
+1. Specimen-level R2, MAE and CI for every target; compare each baseline at the
+   SAME level (tile vs tile, specimen vs specimen).
+2. E_d range and skewness; metrics recomputed in log(E_d) space from saved
+   predictions; residuals vs E_d.
+3. Identifiability ceiling: Extra Trees from ground-truth label features
+   (pore%, log N, pore-type fractions, largest pore size, roundness) to E_d and
+   dH/hs, specimen-grouped; compare with the CNN.
+4. Equivalence check: specimen pairs with near-identical porosity but E_d
+   differing by > 2x; count them and show 5 pairs side by side.
+5. Verdict: is the CNN limited by the model or by the physics (many settings
+   giving the same microstructure)?
+
+
 ######################################################################
 PHASE 5: ROBUSTNESS (all folds)
 ######################################################################
- 
+
 Task: Write scripts/phase5_robustness.py. Output outputs/phase5/.
 1. For every validation tile of every fold, apply: brightness x0.7, x0.8,
    x1.2, x1.3; contrast x0.5, x1.5; Gaussian blur sigma 1 and 2 px;
@@ -354,15 +442,15 @@ Task: Write scripts/phase5_robustness.py. Output outputs/phase5/.
 3. Report R^2, MAE and mean signed bias for pore% per perturbation per method,
    per tile and per specimen, with CIs, and the change vs clean.
 4. Plot pore% R^2 by perturbation, CNN vs threshold, porosity only on its axis.
- 
+
 GATE 5: plain verdict: under which perturbations the CNN degrades less than the
 calibrated threshold, and under which it degrades more.
- 
- 
+
+
 ######################################################################
 PHASE 6: PORE-TYPE CLASSIFICATION (defect crops)
 ######################################################################
- 
+
 Task: Write scripts/phase6_poretype.py. Output outputs/phase6/.
 1. Linking: use the verified crop-to-specimen rule from
    outputs/phase1/id_mapping_verified.csv and the fold of each specimen from
@@ -376,66 +464,19 @@ Task: Write scripts/phase6_poretype.py. Output outputs/phase6/.
 5. Leakage demonstration: random split over crops; report the gap.
 6. Apply the classifier to pores detected in Phase 1 tiles to estimate each
    specimen's pore-type composition; feed it to Phase 4, step 5.
- 
+
 GATE 6: plain verdict on pore-type accuracy under specimen grouping.
- 
- 
-###########################################################
-PHASE 10: POROSITY AND DEFECT ASSESSMENT SYSTEM. Follow Part A rules.
-Reuse Phase 3 and Phase 6 models; no retraining of the backbone unless stated.
-Output outputs/phase10/.
 
-1. Part-level porosity with uncertainty:
-   - Calibrate specimen CNN pore% to Archimedes porosity (100 - density) with a
-     monotone fit (isotonic or linear) per fold on training specimens only.
-   - Add prediction intervals with split conformal prediction (calibration set
-     carved from training specimens; target 90% coverage). Report empirical
-     coverage and mean interval width OOF, by density bin.
-   - Accept/reject: for spec limits of 0.5%, 1% and 2% Archimedes porosity,
-     report sensitivity, specificity, and precision of the calibrated
-     prediction, plus the confusion matrix, OOF and per fold.
 
-2. Full-micrograph defect detection and classification:
-   - Use the Phase 1 pore masks to extract every pore (connected component >= 10
-     um equivalent diameter) in each full micrograph.
-   - Classify each pore with the Phase 6 classifier on a 360 x 360 px crop
-     centred on it (same crop geometry as the labelled crops).
-   - Validate on the 1,200 labelled crops by locating them in the full images
-     (Phase 1 P1 coordinates) and checking that the full-image pipeline assigns
-     the same class: report accuracy, macro-F1, confusion matrix, specimen-grouped.
-   - Per specimen: count and area fraction of each pore type; defect map image
-     for 20 example specimens (one colour per class).
-
-3. Largest-defect statistics (fatigue-relevant):
-   - Per specimen: largest pore sqrt(area) in um, 95th percentile pore size, and
-     maximum Feret diameter.
-   - Fit a Gumbel extreme-value distribution of max sqrt(area) per tile within
-     each specimen and report the predicted largest defect in a reference
-     volume/area (state the reference area used).
-   - Train a regression head on frozen Phase 3 features to predict tile max
-     sqrt(area) directly; report OOF R2 and MAE vs the label pipeline.
-   - Report how largest-defect size relates to porosity, pore type and E_d.
-
-4. End-to-end tool: scripts/assess_micrograph.py taking one micrograph path and
-   returning:
-   (a) part porosity with 90% interval and pass/fail for a given spec limit;
-   (b) pore-type composition;
-   (c) largest defect sqrt(area) and its location;
-   (d) a PNG defect map and a one-page Markdown report.
-   Use the fold model ensemble, or a model trained on all specimens and saved
-   separately as final_model.pt, clearly labelled as not used for any reported
-   metric. Report runtime per micrograph on GPU and CPU.
-
-GATE 10: coverage within 2 points of the 90% target; full-image classification
-validated against labelled crops; tool runs on 5 held-out micrographs and its
-outputs match the OOF results for those specimens.
 ######################################################################
 PHASE 7: CROSS-DATASET TRANSFER (Ackermann steel <-> Ti-6Al-4V)
 ######################################################################
- 
+
 Context: No old model or checkpoint is reused (A14). The steel raw-image model
-is retrained here, in this codebase, from data/ackermann/.
- 
+is retrained here, in this codebase, from data/ackermann/. This phase is core:
+it is the evidence that the porosity measure is general, not lab-specific.
+Use the A16 data-loading settings.
+
 Task: Write scripts/phase7_transfer.py. Output outputs/phase7/.
 1. Steel model, retrained here: crop each raw Ackermann micrograph to its
    registered 600 x 600 field using data/ackermann/raw_registration.csv; use
@@ -452,17 +493,21 @@ Task: Write scripts/phase7_transfer.py. Output outputs/phase7/.
 4. Fine-tuning: head-only and full fine-tuning with 10%, 25% and 50% of the
    target-domain training specimens (grouped), evaluated on held-out target
    specimens. Report the learning curve.
+   Fine-tuning runs use a fixed 15 epochs (checkpoint_mode last) with the
+   cosine schedule over 15 epochs; lr 5e-5 for full fine-tuning, 1e-3 for
+   head-only. Steel model retraining (step 1) keeps 40 epochs. Record this in
+   run_info.json.
 5. Inverse transfer only for E_d normalised within each dataset, labelled
    exploratory.
- 
+
 GATE 7: plain verdict on whether porosity estimation transfers across alloy and
 machine, and how many target specimens fine-tuning needs.
- 
- 
+
+
 ######################################################################
 PHASE 8: EXPLAINABILITY (with sanity checks)
 ######################################################################
- 
+
 Task: Write scripts/phase8_xai.py. Output outputs/phase8/. Implement Grad-CAM
 and Integrated Gradients in ti64/xai.py (new code, A14).
 1. 24 validation tiles (8 per E_d tertile) from folds 1 and 3, both forward
@@ -481,33 +526,82 @@ and Integrated Gradients in ti64/xai.py (new code, A14).
    band's area share; mean and median.
 7. If Phase 6 succeeded: compare Grad-CAM attention on keyhole vs lack-of-fusion
    pores for the inverse model.
- 
+
 GATE 8: list which method/target combinations pass all checks; only those may
 be described in the paper.
- 
- 
+
+
 ######################################################################
-PHASE 9: CONSOLIDATION
+PHASE 10: POROSITY AND DEFECT ASSESSMENT SYSTEM
 ######################################################################
- 
+
+Reuse Phase 3 and Phase 6 models; no backbone retraining except the final
+model in step 4. Output outputs/phase10/.
+
+1. Part-level porosity with uncertainty:
+   - Calibrate specimen CNN pore% to Archimedes porosity (100 - density) with a
+     monotone fit (isotonic or linear) per fold on training specimens only.
+   - Prediction intervals by split conformal prediction (calibration set carved
+     from training specimens; 90% target). Report empirical coverage and mean
+     interval width OOF, by density bin.
+   - Accept/reject at spec limits of 0.5%, 1% and 2% Archimedes porosity:
+     sensitivity, specificity, precision, confusion matrix, OOF and per fold.
+
+2. Full-micrograph defect detection and classification:
+   - Extract every pore >= 10 um equivalent diameter from the Phase 1 masks.
+   - Classify each with the Phase 6 classifier on a 360 x 360 px crop centred on
+     it (same geometry as the labelled crops).
+   - Validate: locate the 1,200 labelled crops in the full images (Phase 1 P1
+     coordinates) and check the full-image pipeline gives the same class:
+     accuracy, macro-F1, confusion matrix, specimen-grouped.
+   - Per specimen: count and area fraction of each pore type; defect maps for
+     20 example specimens (one colour per class).
+
+3. Largest-defect statistics (fatigue-relevant):
+   - Per specimen: largest pore sqrt(area) in um, 95th percentile pore size,
+     maximum Feret diameter.
+   - Gumbel extreme-value fit of max sqrt(area) per tile within each specimen;
+     predicted largest defect in a stated reference area.
+   - Regression head on frozen Phase 3 features predicting tile max sqrt(area);
+     OOF R2 and MAE vs the label pipeline.
+   - Relation of largest-defect size to porosity, pore type and E_d.
+
+4. End-to-end tool: scripts/assess_micrograph.py taking one micrograph path and
+   returning (a) part porosity with 90% interval and pass/fail for a given spec
+   limit; (b) pore-type composition; (c) largest defect sqrt(area) and its
+   location; (d) a PNG defect map and a one-page Markdown report.
+   Use the fold-model ensemble, or a model trained on all specimens saved as
+   final_model.pt and labelled as not used for any reported metric. Report
+   runtime per micrograph on GPU and CPU.
+
+GATE 10: conformal coverage within 2 points of 90%; full-image classification
+validated against the labelled crops; the tool runs on 5 held-out micrographs
+and its outputs match the OOF results for those specimens.
+
+
+######################################################################
+PHASE 9: CONSOLIDATION  (run LAST, after Phase 10)
+######################################################################
+
 Task: Write scripts/phase9_consolidate.py. Output outputs/final/ and upload to
 claude_paper_package/ti64/ in the Claude project.
-1. Build every paper table (CSV and Markdown) from the phase JSON files only
+1. Build every paper table (CSV and Markdown) from the phase JSON files only,
+   including Phases 1b, 3b, 4b and 10
    (A7). Each table cell records its source file in a sidecar JSON.
 2. Regenerate every figure at 300 DPI from saved predictions.
 3. Write final_summary.md: one verdict line per gate, all key numbers with
    CIs, and every deviation from these rules with its reason.
 4. Consistency check: recompute 10 random table numbers from raw prediction
    files and assert they match to 4 decimals.
- 
+
 GATE 9: consistency check passes; outputs uploaded.
- 
- 
+
+
 ######################################################################
 PART B: RISKS SPECIFIC TO THIS DATASET
 ######################################################################
 Paste this block together with Phase 1.
- 
+
 B1. Lossy JPEG: compression blocks can create dark specks that thresholds count
     as pores. Use a minimum pore area in um^2 above block size, and include JPEG
     re-compression in augmentation and robustness.
