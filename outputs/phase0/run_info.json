@@ -1,7 +1,7 @@
 {
   "phase": 0,
   "task": "dataset_verification_and_inventory",
-  "dataset_name": "Ti-6Al-4V LPBF Zenodo 8303011",
+  "dataset_name": "PBF-LB/M Ti6Al4V Micrographs and Labeled Manufacturing Defects",
   "random_seed": 42,
   "execution_mode": "full",
   "timestamp_utc": "2026-10-29 10:17:46 UTC",
@@ -20,5 +20,8 @@
   "distinct_specimens": 773,
   "pixel_scale_um_per_px": 0.5580672883070662,
   "corrupt_images_count": 0,
-  "corrupt_percentage": 0.0
+  "corrupt_percentage": 0.0,
+  "license": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+  "dataset_doi": "10.5281/zenodo.8303011",
+  "dataset_citation": "Meluhn, L. A., M\u00fcller, S., Altmann, M. L., Benthien, T., & Toenjes, A. (2023). PBF-LB/M Ti6Al4V Micrographs and Labeled Manufacturing Defects (Version 1.0) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.8303011"
 }

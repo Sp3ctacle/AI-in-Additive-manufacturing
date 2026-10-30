@@ -17,5 +17,9 @@
     "tiles_index_sha256": "ab8283b0a22508fe4e82bf18b5f7f30ab00872935c6e2c819ca61757451bf86d",
     "total_tiles": 50494,
     "p1_correct_matches": 29
-  }
+  },
+  "license": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+  "dataset_doi": "10.5281/zenodo.8303011",
+  "dataset_name": "PBF-LB/M Ti6Al4V Micrographs and Labeled Manufacturing Defects",
+  "dataset_citation": "Meluhn, L. A., M\u00fcller, S., Altmann, M. L., Benthien, T., & Toenjes, A. (2023). PBF-LB/M Ti6Al4V Micrographs and Labeled Manufacturing Defects (Version 1.0) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.8303011"
 }

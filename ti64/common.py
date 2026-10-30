@@ -31,6 +31,15 @@ import torch
 # Rule A8: Physical scale at native resolution established in Phase 0
 PIXEL_SIZE_UM = 0.55812
 
+# Rule B10: Dataset license and scholarly citation
+DATASET_CITATION = (
+    "Meluhn, L. A., Müller, S., Altmann, M. L., Benthien, T., & Toenjes, A. (2023). "
+    "PBF-LB/M Ti6Al4V Micrographs and Labeled Manufacturing Defects (Version 1.0) [Data set]. "
+    "Zenodo. https://doi.org/10.5281/zenodo.8303011"
+)
+DATASET_LICENSE = "Creative Commons Attribution 4.0 International (CC BY 4.0)"
+DATASET_DOI = "10.5281/zenodo.8303011"
+
 # Standard ImageNet normalization parameters
 IMAGENET_MEAN = torch.tensor([0.485, 0.456, 0.406]).view(3, 1, 1)
 IMAGENET_STD = torch.tensor([0.229, 0.224, 0.225]).view(3, 1, 1)
@@ -98,6 +107,9 @@ def write_run_info(out_dir: Union[str, Path], config: Optional[Dict[str, Any]] =
         "timestamp_utc": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime()),
         "git_commit": get_git_commit(),
         "gpu_model": get_gpu_info(),
+        "license": DATASET_LICENSE,
+        "dataset_doi": DATASET_DOI,
+        "dataset_citation": DATASET_CITATION,
         "package_versions": {
             "python": sys.version.split()[0],
             "numpy": np.__version__,

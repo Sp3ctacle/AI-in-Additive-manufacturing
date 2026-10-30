@@ -18,5 +18,9 @@
     "zero_pore_pct": 0.14853249891076167,
     "mean_pore_pct": 5.014377878921671,
     "elapsed_seconds": 376.24
-  }
+  },
+  "license": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+  "dataset_doi": "10.5281/zenodo.8303011",
+  "dataset_name": "PBF-LB/M Ti6Al4V Micrographs and Labeled Manufacturing Defects",
+  "dataset_citation": "Meluhn, L. A., M\u00fcller, S., Altmann, M. L., Benthien, T., & Toenjes, A. (2023). PBF-LB/M Ti6Al4V Micrographs and Labeled Manufacturing Defects (Version 1.0) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.8303011"
 }

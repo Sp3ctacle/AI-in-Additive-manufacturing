@@ -31,6 +31,42 @@ from .common import (
 from .model import build_model
 
 
+def augment_tile(tile_bgr: np.ndarray) -> np.ndarray:
+    """
+    Data augmentation satisfying Rule B1 and Phase 3/4 standards:
+    - Horizontal / Vertical flips (p=0.5)
+    - 90-degree rotations (0, 90, 180, 270 deg)
+    - Brightness & contrast jitter +/-30%
+    - Mild Gaussian blur (p=0.2)
+    - JPEG re-compression (quality 70-95, p=0.3)
+    - No diagonal crop or non-90 deg rotations that create empty corners (Rule A5).
+    """
+    import random
+    import cv2
+    if random.random() < 0.5:
+        tile_bgr = cv2.flip(tile_bgr, 1)
+    if random.random() < 0.5:
+        tile_bgr = cv2.flip(tile_bgr, 0)
+    k = random.choice([0, 1, 2, 3])
+    if k > 0:
+        tile_bgr = np.rot90(tile_bgr, k).copy()
+
+    alpha = 1.0 + random.uniform(-0.3, 0.3)
+    beta = random.uniform(-30, 30)
+    tile_bgr = np.clip(alpha * tile_bgr.astype(np.float32) + beta, 0, 255).astype(np.uint8)
+
+    # Rule B1: Mild Gaussian blur & JPEG re-compression
+    if random.random() < 0.2:
+        tile_bgr = cv2.GaussianBlur(tile_bgr, (3, 3), sigmaX=0.5)
+
+    if random.random() < 0.3:
+        q = random.randint(70, 95)
+        _, enc = cv2.imencode(".jpg", tile_bgr, [cv2.IMWRITE_JPEG_QUALITY, q])
+        tile_bgr = cv2.imdecode(enc, cv2.IMREAD_COLOR)
+
+    return tile_bgr
+
+
 class TileDataset(Dataset):
     """PyTorch Dataset loading micrograph tiles from disk with unified preprocessing."""
     def __init__(
@@ -39,11 +75,13 @@ class TileDataset(Dataset):
         target_cols: List[str],
         input_size: int = 256,
         scaler: Optional[Any] = None,
+        augment: bool = False,
     ):
         self.df = df.reset_index(drop=True)
         self.target_cols = target_cols
         self.input_size = input_size
         self.scaler = scaler
+        self.augment = augment
 
         self.paths = self.df["tile_path"].tolist()
         self.specimen_ids = self.df["specimen_id"].tolist()
@@ -67,6 +105,9 @@ class TileDataset(Dataset):
         tile_bgr = cv2.imread(path)
         if tile_bgr is None:
             raise FileNotFoundError(f"Failed to read tile at {path}")
+
+        if self.augment:
+            tile_bgr = augment_tile(tile_bgr)
 
         # Unified Rule A4 preprocessing
         tensor = preprocess(tile_bgr, size=self.input_size)
@@ -110,8 +151,8 @@ def train_one_fold(
         scaler.fit(train_df[target_cols].values)
 
     input_size = config.get("input_size", 256)
-    train_dataset = TileDataset(train_df, target_cols, input_size=input_size, scaler=scaler)
-    val_dataset = TileDataset(val_df, target_cols, input_size=input_size, scaler=scaler)
+    train_dataset = TileDataset(train_df, target_cols, input_size=input_size, scaler=scaler, augment=True)
+    val_dataset = TileDataset(val_df, target_cols, input_size=input_size, scaler=scaler, augment=False)
 
     mini_batch_size = config.get("mini_batch_size", 16)
     effective_batch_size = config.get("effective_batch_size", 32)

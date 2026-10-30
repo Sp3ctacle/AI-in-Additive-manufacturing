@@ -146,9 +146,11 @@ class InverseTargetTransformer:
 # ==============================================================================
 def augment_tile(tile_bgr: np.ndarray) -> np.ndarray:
     """
-    Data augmentation for training tiles:
+    Data augmentation satisfying Rule B1 and Phase 3/4 standards:
     - Flips & 90-degree rotations (Rule A5: no diagonal crop/corners)
     - Brightness & contrast jitter +/-30%
+    - Mild Gaussian blur (p=0.2)
+    - JPEG re-compression (quality 70-95, p=0.3)
     """
     if random.random() < 0.5:
         tile_bgr = cv2.flip(tile_bgr, 1)
@@ -161,6 +163,16 @@ def augment_tile(tile_bgr: np.ndarray) -> np.ndarray:
     alpha = 1.0 + random.uniform(-0.3, 0.3)
     beta = random.uniform(-30, 30)
     tile_bgr = np.clip(alpha * tile_bgr.astype(np.float32) + beta, 0, 255).astype(np.uint8)
+
+    # Rule B1: Mild Gaussian blur & JPEG re-compression
+    if random.random() < 0.2:
+        tile_bgr = cv2.GaussianBlur(tile_bgr, (3, 3), sigmaX=0.5)
+
+    if random.random() < 0.3:
+        q = random.randint(70, 95)
+        _, enc = cv2.imencode(".jpg", tile_bgr, [cv2.IMWRITE_JPEG_QUALITY, q])
+        tile_bgr = cv2.imdecode(enc, cv2.IMREAD_COLOR)
+
     return tile_bgr
 
 
@@ -446,6 +458,11 @@ def run_leakage_demonstration(df_tiles: pd.DataFrame, out_dir: Path) -> Dict[str
     logger.info("=== Running LEAKAGE DEMONSTRATION (Random K-Fold across tiles) ===")
     leak_dir = out_dir / "leakage_demonstration"
     leak_dir.mkdir(parents=True, exist_ok=True)
+    leak_metrics_path = leak_dir / "leakage_metrics.json"
+    if leak_metrics_path.exists():
+        logger.info(f"Leakage demonstration already completed. Loading from {leak_metrics_path}")
+        with open(leak_metrics_path, "r") as f:
+            return json.load(f)
 
     rng = np.random.RandomState(42)
     # 80/20 random split over a representative random subset (6,000 tiles) for demonstration speed
