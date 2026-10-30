@@ -1,0 +1,7 @@
+{
+  "status": "LEAKAGE_DEMONSTRATION",
+  "specimen_overlap_count": 578,
+  "target": "E_d",
+  "random_kfold_tile_r2": 0.4450790286064148,
+  "random_kfold_tile_mae": 18.49453353881836
+}

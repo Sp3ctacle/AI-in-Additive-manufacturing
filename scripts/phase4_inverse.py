@@ -677,9 +677,9 @@ def write_phase4_report(
         "",
         "| Model | Features | Specimen $R^2$ | Specimen MAE (J/mm³) | Status |",
         "| :--- | :--- | :--- | :--- | :--- |",
-        f"| **Porosity-Only Linear Baseline** | Ground-truth pore% only | {p2_baselines['porosity_alone']['specimen_r2']:.4f} | {p2_baselines['porosity_alone']['specimen_mae']:.2f} J/mm³ | Univariate lower bound |",
-        f"| **Ridge Regression** | Tile image intensity statistics | {p2_baselines['ridge']['specimen_r2']:.4f} | {p2_baselines['ridge']['specimen_mae']:.2f} J/mm³ | Linear baseline |",
-        f"| **Extra Trees Regressor** | Tile image intensity statistics | {p2_baselines['extra_trees']['specimen_r2']:.4f} | {p2_baselines['extra_trees']['specimen_mae']:.2f} J/mm³ | Non-linear baseline |",
+        f"| **Porosity-Only Linear Baseline** | Ground-truth pore% only | {p2_baselines['E_d']['pore_alone']['pooled_ci']['R2']['point_estimate']:.4f} | {p2_baselines['E_d']['pore_alone']['pooled_ci']['MAE']['point_estimate']:.2f} J/mm³ | Univariate lower bound |",
+        f"| **Ridge Regression** | Tile image intensity statistics | {p2_baselines['E_d']['ridge']['pooled_ci']['R2']['point_estimate']:.4f} | {p2_baselines['E_d']['ridge']['pooled_ci']['MAE']['point_estimate']:.2f} J/mm³ | Linear baseline |",
+        f"| **Extra Trees Regressor** | Tile image intensity statistics | {p2_baselines['E_d']['extra_trees']['pooled_ci']['R2']['point_estimate']:.4f} | {p2_baselines['E_d']['extra_trees']['pooled_ci']['MAE']['point_estimate']:.2f} J/mm³ | Non-linear baseline |",
         f"| **CNN (`tf_efficientnetv2_s`)** | Raw Micrograph Pixels | **{ed_s['r2']:.4f}** | **{ed_s['mae']:.2f} J/mm³** | **Deep representation** |",
         "",
         "### Hypothesis Test: Does the CNN Extract Information Beyond Porosity?",
@@ -725,7 +725,7 @@ def write_phase4_report(
         "| Metric / Requirement | Target / Baseline | CNN Achieved | Status |",
         "| :--- | :--- | :--- | :--- |",
         f"| **Specimen Grouping (A1)** | Disjoint specimens across 5 folds | Asserted 0 leakage (734 specimens) | **PASS** |",
-        f"| **Inverse Prediction ($E_d$)** | Outperform porosity-only model ($R^2 = {p2_baselines['porosity_alone']['specimen_r2']:.4f}$) | Specimen $R^2 = {ed_s['r2']:.4f}$ [95% CI: {ed_s['r2_ci'][0]:.4f}, {ed_s['r2_ci'][1]:.4f}] | **PASS** |",
+        f"| **Inverse Prediction ($E_d$)** | Outperform porosity-only model ($R^2 = {p2_baselines['E_d']['pore_alone']['pooled_ci']['R2']['point_estimate']:.4f}$) | Specimen $R^2 = {ed_s['r2']:.4f}$ [95% CI: {ed_s['r2_ci'][0]:.4f}, {ed_s['r2_ci'][1]:.4f}] | **PASS** |",
         f"| **Information Beyond Porosity** | $\\Delta\\text{{MAE}} > 0$ with 95% CI strictly positive | $\\Delta\\text{{MAE}} = {p_comp['diff_mae']:+.2f}\\,\\text{{J/mm}}^3$ [{p_comp['ci_lo']:+.2f}, {p_comp['ci_hi']:+.2f}] | **{p_comp['verdict']}** |",
         f"| **Normalized Enthalpy ($dH/h_s$)** | Literature physical constants documented | Specimen $R^2 = {overall_metrics['normalized_enthalpy']['specimen_level']['r2']:.4f}$ | **PASS** |",
         f"| **Ambiguity Analysis** | Document $|\\text{{error}}| > 2\\times\\text{{MAE}}$ outliers | {len(ambiguous_df)} outliers characterized | **PASS** |",
@@ -865,8 +865,8 @@ def main():
     spec_ids = df_spec_oof["specimen_id"].values
 
     # Merge Phase 2 porosity baseline predictions
-    p2_base_ed_mae = p2_baselines["porosity_alone"]["specimen_mae"]
-    p2_base_ed_r2 = p2_baselines["porosity_alone"]["specimen_r2"]
+    p2_base_ed_mae = p2_baselines["E_d"]["pore_alone"]["pooled_ci"]["MAE"]["point_estimate"]
+    p2_base_ed_r2 = p2_baselines["E_d"]["pore_alone"]["pooled_ci"]["R2"]["point_estimate"]
 
     # Compute paired specimen difference vs porosity baseline:
     # We load Phase 2 tile predictions for porosity baseline to compute exact paired bootstrap
