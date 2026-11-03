@@ -54,7 +54,7 @@ We directly benchmark the CNN's volumetric energy density prediction against the
 - **Verdict:** **BEATS (EXCEEDS POROSITY-ONLY BASELINE)**
 
 > [!IMPORTANT]
-> Because the 95% bootstrap confidence interval [+9.98, +12.45] J/mm³ strictly excludes zero, the CNN conclusively proves that optical micrographs contain significant process-state signals beyond void fraction alone. The spatial pattern, melt pool boundaries, and microstructural textures encode thermal history that cannot be captured by scalar porosity.
+> Because the 95% bootstrap confidence interval [+9.98, +12.45] J/mm³ strictly excludes zero, the CNN extracts process-state signals beyond scalar void fraction alone. Spatial arrangement of pores and pore size distributions encode processing conditions more effectively than simple scalar porosity.
 
 ---
 
@@ -66,7 +66,7 @@ We directly benchmark the CNN's volumetric energy density prediction against the
 ![Ambiguity Analysis](ambiguity_analysis.png)
 
 ### Metallurgical Root Causes of Inverse Degeneracy:
-1. **Ill-Posed Degeneracy of 1D Energy Density:** Volumetric energy density $E_d = P / (v \cdot h \cdot t)$ lumps four distinct process parameters into a single scalar. Two wildly disparate process states—e.g., high laser power with high scan speed ($P=350\,\text{W}, v=1500\,\text{mm/s}$) versus low power with low speed ($P=150\,\text{W}, v=600\,\text{mm/s}$)—can yield the exact same $E_d \approx 50\,\text{J/mm}^3$, producing similar conduction-mode thermal fields. The network cannot uniquely resolve this 4-to-1 projection.
+1. **Ill-Posed Degeneracy of 1D Energy Density:** Volumetric energy density $E_d = P / (v \cdot h \cdot t)$ lumps four distinct process parameters into a single scalar. As an illustrative example of parameter degeneracy, distinct parameter combinations—such as high laser power with high scan speed ($P=350\,\text{W}, v=1500\,\text{mm/s}$) versus low power with low speed ($P=150\,\text{W}, v=600\,\text{mm/s}$)—can yield similar volumetric energy density ($E_d \approx 50\,\text{J/mm}^3$), producing similar conduction-mode thermal fields. The network cannot uniquely resolve this 4-to-1 projection.
 2. **Information Loss in the Dense Process Window:** In fully dense specimens ($E_d \in [50, 100]\,\text{J/mm}^3$, density $> 99.5\%$), nearly zero voids exist. Without voids to distinguish melt pool geometry, the optical appearance of the polished Ti-6Al-4V matrix is essentially uniform across a broad $50\,\text{J/mm}^3$ energy window.
 3. **Thermal Boundary Non-Linearities:** At very low $E_d$ ($<20\,\text{J/mm}^3$), lack-of-fusion voids dominate; at very high $E_d$ ($>120\,\text{J/mm}^3$), keyhole vapor depression occurs. Between these extremes, microstructures plateau.
 
@@ -99,7 +99,7 @@ To illustrate the catastrophic risk of random tile-level cross-validation withou
 
 ### Formal Gate 4 Statement:
 1. **Micrographs Predict Process State:** In this dataset, raw optical micrographs reliably predict LPBF process parameters, achieving specimen-level $R^2 = 0.6053$ for volumetric energy density $E_d$ and $R^2 = 0.8058$ for normalized enthalpy.
-2. **Exceeds Porosity-Only Baseline:** The CNN significantly outperforms the univariate porosity-only baseline by $\Delta\text{MAE} = +11.25\,\text{J/mm}^3$ [95% bootstrap CI: +9.98, +12.45 J/mm³], proving conclusively that optical micrographs contain textural and spatial information beyond void fraction alone.
+2. **Exceeds Porosity-Only Baseline:** The CNN significantly outperforms the univariate porosity-only baseline by $\Delta\text{MAE} = +11.25\,\text{J/mm}^3$ [95% bootstrap CI: +9.98, +12.45 J/mm³], demonstrating that optical micrographs contain spatial defect arrangements and morphology information beyond scalar void fraction alone.
 3. **Physical Limits & Ambiguities:** Inverse process estimation is fundamentally bounded by process-space degeneracy (different $(P, v, h, t)$ producing identical $E_d$) and feature collapse in the dense window ($E_d \in [50, 100]\,\text{J/mm}^3$) where void-free micrographs provide minimal discriminative cues.
 
 **GATE 4: PASS.**
