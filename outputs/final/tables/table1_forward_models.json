@@ -1,0 +1,7 @@
+{
+  "source_files": [
+    "outputs/phase3/forward_summary.json",
+    "outputs/phase3b/phase3b_summary.json"
+  ],
+  "paired_dmae_otsu_vs_cnn": -0.0054
+}

@@ -14,11 +14,13 @@ The Phase 2 baseline computed a global histogram threshold cut-off without morph
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Tile-Level** | MAE (%) | 0.2080% | 0.3445% | - | CNN lower tile error |
 | **Tile-Level** | $R^2$ | 0.9373 | 0.9181 | - | - |
-| **Specimen-Level** | MAE (%) | 0.2053% [0.1739%, 0.2387%] | 0.2106% | $\Delta\text{MAE} = -0.1472\%$ [-0.1865%, -0.1093%] | **TRAILS** |
+| **Specimen-Level** | MAE (%) | 0.2053% [0.1739%, 0.2387%] | 0.2106% | $\Delta\text{MAE} = -0.0054\%$ [-0.0415%, +0.0280%] | **Statistical Parity** |
 | **Specimen-Level** | $R^2$ | 0.9973 [0.9964, 0.9980] | 0.9969 | - | Near-identical fit |
 
+
 > [!NOTE]
-> The 95% paired bootstrap confidence interval for specimen MAE difference [-0.1865%, -0.1093%] includes zero. This demonstrates **statistical parity**: the CNN has faithfully internalised the optical thresholding and void-segmentation rule at the 256 px scale without hallucinating voids or introducing systematic error.
+> **Fixup F1 Verification:** Recomputing the paired specimen-level difference $\Delta\text{MAE} = \text{MAE}_{\text{baseline}} - \text{MAE}_{\text{CNN}}$ with 2,000 specimen cluster bootstraps yields **-0.0054% [95% CI: -0.0415%, +0.0280%]**, matching $\text{MAE}_{\text{base}} - \text{MAE}_{\text{CNN}} = 0.2053\% - 0.2106\% = -0.0054\%$ exactly within numerical precision.
+> Because the 95% bootstrap confidence interval [-0.0415%, +0.0280%] strictly includes zero, the formal statistical verdict is **Statistical Parity** (no statistically significant difference between the fair per-tile Otsu baseline and the CNN at the specimen level). The previously reported value (-0.1472%) was an artifact of averaging tile-level absolute error differences instead of specimen-level aggregated prediction errors.
 
 ---
 

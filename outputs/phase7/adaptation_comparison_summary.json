@@ -1,0 +1,44 @@
+[
+  {
+    "target_data_pct": 10,
+    "steel_init_specimen_r2": 0.8188076576617536,
+    "steel_init_specimen_mae": 1.7255687339953865,
+    "imagenet_init_specimen_r2": 0.8650968610590075,
+    "imagenet_init_specimen_mae": 1.479911007728336,
+    "paired_dmae": -0.2456577262670506,
+    "paired_dmae_ci": [
+      -0.5148929194758023,
+      -0.005796951426150977
+    ],
+    "transfer_claimed": false,
+    "verdict": "TRANSFER NOT CLAIMED (Steel does not beat ImageNet with CI excluding 0)"
+  },
+  {
+    "target_data_pct": 25,
+    "steel_init_specimen_r2": 0.811049392591127,
+    "steel_init_specimen_mae": 1.5418757675876147,
+    "imagenet_init_specimen_r2": 0.7831044604420555,
+    "imagenet_init_specimen_mae": 1.6362963526607108,
+    "paired_dmae": 0.09442058507309652,
+    "paired_dmae_ci": [
+      -0.10182973483191554,
+      0.32465378545391016
+    ],
+    "transfer_claimed": false,
+    "verdict": "TRANSFER NOT CLAIMED (Steel does not beat ImageNet with CI excluding 0)"
+  },
+  {
+    "target_data_pct": 50,
+    "steel_init_specimen_r2": 0.7613322744155816,
+    "steel_init_specimen_mae": 1.5676879160783965,
+    "imagenet_init_specimen_r2": 0.8208059184621564,
+    "imagenet_init_specimen_mae": 1.3169561386461457,
+    "paired_dmae": -0.2507317774322508,
+    "paired_dmae_ci": [
+      -0.5330292300181061,
+      -0.025415693763412007
+    ],
+    "transfer_claimed": false,
+    "verdict": "TRANSFER NOT CLAIMED (Steel does not beat ImageNet with CI excluding 0)"
+  }
+]

@@ -1,22 +1,30 @@
 {
-  "gradcam": {
-    "target_layer": "backbone.conv_head",
-    "mean_enrichment": 4.150381287401467,
-    "median_enrichment": 3.3567035450035934,
-    "cascading_randomization": {
-      "rho_stage1_head": 0.4487175083785275,
-      "rho_stage2_head_conv": 0.18024912953728814,
-      "rho_stage3_whole": NaN,
-      "passed": false
-    },
-    "deletion_curve": {
-      "auc_targeted": 29.414212346076965,
-      "auc_random": 28.881706190109256,
-      "passed": false
-    }
+  "deletion_sanity_check": {
+    "metric_direction": "prediction_change_|f(x_k)-f(x)|_larger_equals_more_faithful",
+    "mean_targeted_auc": 12.131,
+    "mean_random_auc": 16.5883,
+    "paired_difference_auc": -4.4573,
+    "paired_ci_95": [
+      -5.9857,
+      -2.9267
+    ],
+    "verdict": "FAILED"
+  },
+  "pore_grounding_enrichment": {
+    "median_enrichment": 3.3614,
+    "mean_enrichment": 4.152,
+    "verdict": "PASS"
+  },
+  "cascading_randomization": {
+    "spearman_rho_stage3": 0.1842,
+    "threshold": 0.25,
+    "verdict": "PASS"
   },
   "integrated_gradients": {
-    "median_completeness_ratio": 8.125711405469517,
-    "passed": false
+    "baseline": "uniform_matrix_grey_140",
+    "steps": 200,
+    "median_completeness_ratio": 8.1257,
+    "threshold": 0.05,
+    "verdict": "FAIL"
   }
 }

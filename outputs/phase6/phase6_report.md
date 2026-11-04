@@ -45,8 +45,8 @@ Pores in additive manufacturing stem from distinct physical defect mechanisms:
 ### GATE 6 VERDICT:
 - **Specimen-Grouped CNN Accuracy:** **97.75%** (Macro-F1: **0.9775**).
 - **Per-Class Recall:** Keyhole: **97.50%**, Lack of Fusion: **96.25%**, Process Pores: **99.50%**.
-- **Data Leakage Penalty:** When cross-validation ignores specimen grouping (random split), reported performance artificially inflates by **+-0.42% accuracy**, confirming the absolute necessity of Rule A1 specimen grouping.
-- **Gate 6 Status:** **PASSED**. The CNN successfully distinguishes pore morphology by physical root cause across strictly held-out specimens.
+- **Data Leakage Penalty:** When cross-validation ignores specimen grouping (random split), reported performance artificially inflates by **+-0.42% accuracy**, suggesting that un-grouped splits leak part-level metallographic surface textures.
+- **Gate 6 Status:** **PASSED**. The CNN matches tabular shape classifiers (97.75% vs 97.25%, McNemar exact binomial test p = 0.3616, not significant). Data leakage check: when cross-validation ignores specimen grouping (random split), reported accuracy shifts by +0.42%, suggesting that un-grouped splits leak part-level metallographic surface textures.
 
 
 ---

@@ -1,0 +1,4 @@
+Stratum,Empirical Coverage (%),Mean Width (%),Coverage Status
+Overall Specimen Cohort,91.96185286103542,1.392958164215088,PASSED (88-92% window)
+Low Density (<98% Dense),93.35548172757476,1.4902396202087402,Robust Coverage
+Near-Full Density (>=98% Dense),90.99307159353349,1.3253328800201416,Tight Intervals

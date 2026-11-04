@@ -1,0 +1,10 @@
+{
+  "baseline_mae": 0.2053,
+  "cnn_mae": 0.2106,
+  "paired_dmae": -0.0054,
+  "paired_dmae_ci": [
+    -0.0415,
+    0.028
+  ],
+  "verdict": "Statistical Parity (95% CI includes 0)"
+}

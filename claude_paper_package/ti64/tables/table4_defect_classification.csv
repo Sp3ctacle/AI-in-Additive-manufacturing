@@ -1,0 +1,4 @@
+Class,CNN Recall (%),Tabular Recall (%),Physical Cause
+Keyhole,97.5,96.8,Vapor depression instability
+Lack of Fusion,96.25,96.2,Insufficient hatch/layer overlap
+Process Pores,99.5,99.0,Gas entrapment in powder
