@@ -1,0 +1,53 @@
+[
+  {
+    "regime": "Low E_d (Lack of Fusion)",
+    "n_specimens": 241,
+    "ed_min_j_mm3": 8.278655773,
+    "ed_max_j_mm3": 28.19222762,
+    "mu_median_um": 61.10786390305195,
+    "mu_mean_um": 78.3114182713785,
+    "mu_iqr_low_um": 24.047175481354845,
+    "mu_iqr_high_um": 119.44401975611427,
+    "beta_median_um": 28.452119082943113,
+    "beta_mean_um": 30.62713665103772,
+    "beta_iqr_low_um": 13.81905274362015,
+    "beta_iqr_high_um": 44.75648909602653,
+    "qq_corr_median": 0.9843822722444872,
+    "qq_corr_mean": 0.9435559826123268,
+    "ad_pass_rate_5pct": 0.6970954356846473
+  },
+  {
+    "regime": "Mid E_d (Conduction)",
+    "n_specimens": 240,
+    "ed_min_j_mm3": 28.20397112,
+    "ed_max_j_mm3": 55.82811086,
+    "mu_median_um": 16.645081993807562,
+    "mu_mean_um": 24.87357559174712,
+    "mu_iqr_low_um": 7.808651888509285,
+    "mu_iqr_high_um": 34.55541869583985,
+    "beta_median_um": 10.273434104796802,
+    "beta_mean_um": 14.343999947207072,
+    "beta_iqr_low_um": 7.4614298515555895,
+    "beta_iqr_high_um": 15.113164456542929,
+    "qq_corr_median": 0.9577277157338191,
+    "qq_corr_mean": 0.8681473251829317,
+    "ad_pass_rate_5pct": 0.3625
+  },
+  {
+    "regime": "High E_d (Keyholing)",
+    "n_specimens": 240,
+    "ed_min_j_mm3": 56.11935601,
+    "ed_max_j_mm3": 191.6750848,
+    "mu_median_um": 24.11452965875258,
+    "mu_mean_um": 23.423197339319078,
+    "mu_iqr_low_um": 7.215425522378856,
+    "mu_iqr_high_um": 36.06409642526896,
+    "beta_median_um": 10.502071036022489,
+    "beta_mean_um": 12.676295640635008,
+    "beta_iqr_low_um": 7.783235793987838,
+    "beta_iqr_high_um": 14.658088356639965,
+    "qq_corr_median": 0.971548791886812,
+    "qq_corr_mean": 0.8756556163892865,
+    "ad_pass_rate_5pct": 0.45
+  }
+]

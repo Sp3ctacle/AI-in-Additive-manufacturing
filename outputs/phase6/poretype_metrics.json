@@ -45,5 +45,12 @@
     "random_split_macro_f1": 0.9683316457384062,
     "accuracy_gap": -0.004166666666666652,
     "f1_gap": -0.004167990975235014
+  },
+  "cnn_vs_tabular": {
+    "tabular_accuracy": 0.9725,
+    "cnn_accuracy": 0.9775,
+    "mcnemar_chi2": 0.8333,
+    "mcnemar_exact_p": 0.3616,
+    "verdict": "CNN matches tabular shape classifiers (97.75% vs 97.25%, p = 0.3616, n.s.)"
   }
 }

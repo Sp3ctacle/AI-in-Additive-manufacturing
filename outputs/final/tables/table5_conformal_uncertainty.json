@@ -1,4 +1,4 @@
 {
   "source_file": "outputs/phase10/part_porosity_uncertainty.csv",
-  "reference_used": "Optical ground-truth porosity label"
+  "reference": "Ground-truth optical porosity label"
 }

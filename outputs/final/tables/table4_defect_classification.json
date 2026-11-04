@@ -1,5 +1,4 @@
 {
   "source_file": "outputs/phase6/poretype_metrics.json",
-  "pooled_accuracy": 0.9775,
-  "mcnemar_p_value": 0.3616
+  "scope": "Validated on crops only (1,200 crops across 114 specimens)"
 }

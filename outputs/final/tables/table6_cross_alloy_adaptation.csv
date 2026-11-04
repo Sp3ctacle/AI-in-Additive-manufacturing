@@ -1,7 +1,7 @@
-Target Data Fraction (%),Initialization Mode,N Train Specimens,Specimen R2,Specimen R2 Std,Specimen MAE (%),Specimen MAE Std (%)
-10,Steel 316L Pretrained,51,0.8188,0.0299,1.7256,0.1274
-10,ImageNet From-Scratch,51,0.8651,0.0209,1.4799,0.1242
-25,Steel 316L Pretrained,128,0.811,0.0131,1.5419,0.047
-25,ImageNet From-Scratch,128,0.7831,0.0614,1.6363,0.3302
-50,Steel 316L Pretrained,257,0.7613,0.0156,1.5677,0.0755
-50,ImageNet From-Scratch,257,0.8208,0.0306,1.317,0.0638
+Evaluation Level,Target Data Fraction (%),Initialization Mode,N Train Specimens,Specimen R2,Specimen R2 Std,Specimen MAE (%),Specimen MAE Std (%)
+Specimen Level,10,ImageNet From-Scratch,51,0.8651,0.0209,1.4799,0.1242
+Specimen Level,10,Steel 316L Pretrained,51,0.8188,0.0299,1.7256,0.1274
+Specimen Level,25,ImageNet From-Scratch,128,0.7831,0.0614,1.6363,0.3302
+Specimen Level,25,Steel 316L Pretrained,128,0.811,0.0131,1.5419,0.047
+Specimen Level,50,ImageNet From-Scratch,257,0.8208,0.0306,1.317,0.0638
+Specimen Level,50,Steel 316L Pretrained,257,0.7613,0.0156,1.5677,0.0755

@@ -1,4 +1,4 @@
-Class,CNN Recall (%),Tabular Recall (%),Physical Cause
-Keyhole,97.5,96.8,Vapor depression instability
-Lack of Fusion,96.25,96.2,Insufficient hatch/layer overlap
-Process Pores,99.5,99.0,Gas entrapment in powder
+Class,CNN Recall (%),Tabular Recall (%),Physical Cause,Evaluation Scope
+Keyhole,97.5,96.8,Vapor depression instability,Validated on crops only
+Lack of Fusion,96.25,96.2,Insufficient hatch/layer overlap,Validated on crops only
+Process Pores,99.5,99.0,Gas entrapment in powder,Validated on crops only

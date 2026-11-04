@@ -1,4 +1,3 @@
 {
-  "source_file": "outputs/phase5/robustness_metrics_summary_v2.csv",
-  "rule_enforced": "Rule A9 paired specimen CIs"
+  "source_file": "outputs/phase5/robustness_metrics_summary_v2.csv"
 }
