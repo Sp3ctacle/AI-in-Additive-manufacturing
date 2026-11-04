@@ -26,9 +26,8 @@ class GradCAM:
         self.target_layer = target_layer
         self.gradients: Optional[torch.Tensor] = None
         self.activations: Optional[torch.Tensor] = None
-
-        self.fwd_hook = self.target_layer.register_forward_hook(self._save_activations)
-        self.bwd_hook = self.target_layer.register_full_backward_hook(self._save_gradients)
+        self.fwd_hook = None
+        self.bwd_hook = None
 
     def _save_activations(self, module, input, output):
         self.activations = output
@@ -37,8 +36,12 @@ class GradCAM:
         self.gradients = grad_output[0]
 
     def remove_hooks(self):
-        self.fwd_hook.remove()
-        self.bwd_hook.remove()
+        if self.fwd_hook is not None:
+            self.fwd_hook.remove()
+            self.fwd_hook = None
+        if self.bwd_hook is not None:
+            self.bwd_hook.remove()
+            self.bwd_hook = None
 
     def generate(self, input_tensor: torch.Tensor, target_idx: int = 0) -> np.ndarray:
         """
@@ -48,28 +51,34 @@ class GradCAM:
         self.model.eval()
         self.model.zero_grad()
         
-        preds = self.model(input_tensor)
-        score = preds[0, target_idx]
-        score.backward(retain_graph=True)
+        # Attach hooks only during this invocation
+        self.fwd_hook = self.target_layer.register_forward_hook(self._save_activations)
+        self.bwd_hook = self.target_layer.register_full_backward_hook(self._save_gradients)
+        try:
+            preds = self.model(input_tensor)
+            score = preds[0, target_idx]
+            score.backward(retain_graph=False)
 
-        grads = self.gradients.detach()      # (1, C, H', W')
-        acts = self.activations.detach()     # (1, C, H', W')
+            grads = self.gradients.detach()      # (1, C, H', W')
+            acts = self.activations.detach()     # (1, C, H', W')
 
-        weights = torch.mean(grads, dim=(2, 3), keepdim=True)  # (1, C, 1, 1)
-        cam = torch.sum(weights * acts, dim=1, keepdim=True)   # (1, 1, H', W')
-        cam = F.relu(cam)
+            weights = torch.mean(grads, dim=(2, 3), keepdim=True)  # (1, C, 1, 1)
+            cam = torch.sum(weights * acts, dim=1, keepdim=True)   # (1, 1, H', W')
+            cam = F.relu(cam)
 
-        cam_resized = F.interpolate(
-            cam, size=(input_tensor.shape[2], input_tensor.shape[3]),
-            mode="bilinear", align_corners=False
-        )
-        cam_np = cam_resized.squeeze().cpu().numpy()
-        cam_max = np.max(cam_np)
-        if cam_max > 1e-8:
-            cam_np /= cam_max
-        else:
-            cam_np = np.zeros_like(cam_np)
-        return cam_np
+            cam_resized = F.interpolate(
+                cam, size=(input_tensor.shape[2], input_tensor.shape[3]),
+                mode="bilinear", align_corners=False
+            )
+            cam_np = cam_resized.squeeze().cpu().numpy()
+            cam_max = np.max(cam_np)
+            if cam_max > 1e-8:
+                cam_np /= cam_max
+            else:
+                cam_np = np.zeros_like(cam_np)
+            return cam_np
+        finally:
+            self.remove_hooks()
 
 
 def compute_integrated_gradients(
@@ -78,28 +87,34 @@ def compute_integrated_gradients(
     baseline_tensor: torch.Tensor,
     target_idx: int = 0,
     steps: int = 200,
+    batch_size: int = 16,
 ) -> Tuple[np.ndarray, float]:
     """
-    Computes Integrated Gradients path integral between baseline and input.
-    Returns (saliency_map_2d, completeness_ratio).
+    Computes Integrated Gradients path integral between baseline and input
+    using memory-safe sub-batches. Returns (saliency_map_2d, completeness_ratio).
     """
     model.eval()
     alphas = torch.linspace(0.0, 1.0, steps + 1, device=input_tensor.device)
-    
-    # Linear interpolation along straight path
     delta = input_tensor - baseline_tensor
-    interpolated = [baseline_tensor + alpha * delta for alpha in alphas]
-    interpolated = torch.cat(interpolated, dim=0)  # (steps+1, 3, H, W)
 
-    interpolated.requires_grad_(True)
-    preds = model(interpolated)
-    target_scores = preds[:, target_idx]
-    
-    grad_outputs = torch.ones_like(target_scores)
-    grads = torch.autograd.grad(target_scores, interpolated, grad_outputs=grad_outputs, retain_graph=False)[0]
+    all_grads = []
+    # Process interpolation in sub-batches to prevent memory allocation spikes
+    for b_start in range(0, steps + 1, batch_size):
+        b_end = min(b_start + batch_size, steps + 1)
+        sub_alphas = alphas[b_start:b_end]
+        sub_interpolated = torch.cat([baseline_tensor + a * delta for a in sub_alphas], dim=0)
+        sub_interpolated.requires_grad_(True)
+
+        preds = model(sub_interpolated)
+        target_scores = preds[:, target_idx]
+        grad_outputs = torch.ones_like(target_scores)
+        grads = torch.autograd.grad(target_scores, sub_interpolated, grad_outputs=grad_outputs, retain_graph=False)[0]
+        all_grads.append(grads.detach())
+
+    full_grads = torch.cat(all_grads, dim=0)  # (steps+1, 3, H, W)
 
     # Trapezoidal approximation
-    avg_grads = torch.mean(grads[:-1] + grads[1:], dim=0) * 0.5
+    avg_grads = torch.mean(full_grads[:-1] + full_grads[1:], dim=0) * 0.5
     ig = (delta.squeeze(0) * avg_grads).detach()  # (3, H, W)
     
     # 2D heatmap by summing absolute attributions over channels
@@ -147,3 +162,4 @@ def evaluate_pore_grounding(
     hit_rate = hits / total_top
     enrichment = hit_rate / max(area_share, 1e-6)
     return float(enrichment)
+

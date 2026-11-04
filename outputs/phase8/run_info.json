@@ -1,0 +1,19 @@
+{
+  "timestamp_utc": "2026-11-04 02:48:17 UTC",
+  "git_commit": "a15d3ddaed6a864801379b140d1cc6ce42b52f0b",
+  "gpu_model": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "license": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+  "dataset_doi": "10.5281/zenodo.8303011",
+  "dataset_citation": "Meluhn, L. A., M\u00fcller, S., Altmann, M. L., Benthien, T., & Toenjes, A. (2023). PBF-LB/M Ti6Al4V Micrographs and Labeled Manufacturing Defects (Version 1.0) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.8303011",
+  "package_versions": {
+    "python": "3.11.4",
+    "numpy": "1.26.4",
+    "pandas": "3.0.6",
+    "cv2": "4.10.0",
+    "torch": "2.5.1+cu121",
+    "scipy": "1.12.0",
+    "sklearn": "1.9.1"
+  },
+  "config": {},
+  "phase": "8"
+}

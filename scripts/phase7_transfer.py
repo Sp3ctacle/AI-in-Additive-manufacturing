@@ -17,7 +17,7 @@ import sys
 import json
 import time
 from pathlib import Path
-from typing import Dict, List, Tuple, Any
+from typing import Dict, List, Tuple, Any, Optional
 
 import cv2
 import numpy as np
@@ -26,6 +26,7 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import GroupKFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
+import scipy.stats as stats
 
 import torch
 import torch.nn as nn
@@ -152,29 +153,38 @@ def main():
         criterion = nn.MSELoss()
         scaler_amp = torch.amp.GradScaler("cuda", enabled=(device.type == "cuda"))
 
-        for ep in range(1, epochs_steel + 1):
-            model.train()
-            for imgs, lbls in tr_loader:
-                imgs, lbls = imgs.to(device), lbls.to(device).unsqueeze(1)
-                optimizer.zero_grad()
-                with torch.amp.autocast("cuda", enabled=(device.type == "cuda")):
-                    preds = model(imgs)
-                    loss = criterion(preds, lbls)
-                scaler_amp.scale(loss).backward()
-                scaler_amp.step(optimizer)
-                scaler_amp.update()
-            scheduler.step()
-
-        # Save checkpoint (Rule A2)
         f_dir = out_dir / "steel_model" / f"fold_{f_idx}"
         f_dir.mkdir(parents=True, exist_ok=True)
-        torch.save({
-            "model_state_dict": model.state_dict(),
-            "scaler_mean": float(scaler.mean_[0]),
-            "scaler_scale": float(scaler.scale_[0]),
-            "fold": f_idx,
-            "epoch": epochs_steel
-        }, f_dir / "checkpoint_last.pt")
+        ckpt_file = f_dir / "checkpoint_last.pt"
+
+        if ckpt_file.exists():
+            print(f"[Steel Fold {f_idx}] Saved checkpoint found. Resuming without retraining...")
+            ckpt_data = torch.load(ckpt_file, map_location="cpu")
+            model.load_state_dict(ckpt_data["model_state_dict"])
+            scaler.mean_ = np.array([ckpt_data["scaler_mean"]])
+            scaler.scale_ = np.array([ckpt_data["scaler_scale"]])
+        else:
+            for ep in range(1, epochs_steel + 1):
+                model.train()
+                for imgs, lbls in tr_loader:
+                    imgs, lbls = imgs.to(device), lbls.to(device).unsqueeze(1)
+                    optimizer.zero_grad()
+                    with torch.amp.autocast("cuda", enabled=(device.type == "cuda")):
+                        preds = model(imgs)
+                        loss = criterion(preds, lbls)
+                    scaler_amp.scale(loss).backward()
+                    scaler_amp.step(optimizer)
+                    scaler_amp.update()
+                scheduler.step()
+
+            # Save checkpoint (Rule A2)
+            torch.save({
+                "model_state_dict": model.state_dict(),
+                "scaler_mean": float(scaler.mean_[0]),
+                "scaler_scale": float(scaler.scale_[0]),
+                "fold": f_idx,
+                "epoch": epochs_steel
+            }, ckpt_file)
 
         # Evaluate validation fold
         model.eval()
@@ -186,9 +196,9 @@ def main():
                     preds = model(imgs)
                 f_preds.extend(preds.cpu().numpy().flatten())
 
-        # Invert target scaling
+        # Invert target scaling safely
         unscaled = np.array(f_preds) * scaler.scale_[0] + scaler.mean_[0]
-        pore_pred = np.clip(unscaled, 0.0, None) ** 2
+        pore_pred = np.clip(unscaled, 0.0, 10.0) ** 2
         steel_oof_preds[va_indices] = pore_pred
 
         f_r2 = r2_score(merged_steel.loc[va_indices, "pore%"].values, pore_pred)
@@ -222,14 +232,17 @@ def main():
             batch_df = ti_sample_df.iloc[b_start : b_start + 128]
             tensors = [preprocess(cv2.imread(str(repo_root / p)), size=256) for p in batch_df["tile_path"]]
             batch = torch.stack(tensors).to(device)
-            with torch.amp.autocast("cuda", enabled=(device.type == "cuda")):
-                p_out = model_steel(batch)
+            # Full FP32 evaluation prevents numerical overflow on extreme out-of-domain shift
+            with torch.amp.autocast("cuda", enabled=False):
+                p_out = model_steel(batch.float())
             ti_preds_zeroshot.extend(p_out.cpu().numpy().flatten())
 
-    unscaled_ti = np.array(ti_preds_zeroshot) * s_ckpt["scaler_scale"] + s_ckpt["scaler_mean"]
-    ti_pore_pred = np.clip(unscaled_ti, 0.0, None) ** 2
-    r2_zero_steel_on_ti = r2_score(ti_sample_df["pore_percent_otsu"].values, ti_pore_pred)
-    mae_zero_steel_on_ti = mean_absolute_error(ti_sample_df["pore_percent_otsu"].values, ti_pore_pred)
+    raw_ti = np.nan_to_num(np.array(ti_preds_zeroshot), nan=0.0, posinf=10.0, neginf=0.0)
+    unscaled_ti = raw_ti * s_ckpt["scaler_scale"] + s_ckpt["scaler_mean"]
+    ti_pore_pred = np.clip(unscaled_ti, 0.0, 10.0) ** 2
+    r2_zero_steel_on_ti = float(r2_score(ti_sample_df["pore_percent_otsu"].values, ti_pore_pred))
+    mae_zero_steel_on_ti = float(mean_absolute_error(ti_sample_df["pore_percent_otsu"].values, ti_pore_pred))
+    rho_zero_steel_on_ti, _ = stats.spearmanr(ti_sample_df["pore_percent_otsu"].values, ti_pore_pred)
 
     # 3(b): Ti-6Al-4V Model on Steel crops (Phase 3 Fold 0 model)
     ti_ckpt = torch.load(repo_root / "outputs" / "phase3" / "fold_0" / "checkpoint_last.pt", map_location="cpu")
@@ -244,17 +257,19 @@ def main():
             batch_df = merged_steel.iloc[b_start : b_start + 128]
             tensors = [preprocess(cv2.imread(p), size=256) for p in batch_df["full_path"]]
             batch = torch.stack(tensors).to(device)
-            with torch.amp.autocast("cuda", enabled=(device.type == "cuda")):
-                p_out = model_ti(batch)[:, 0]
+            with torch.amp.autocast("cuda", enabled=False):
+                p_out = model_ti(batch.float())[:, 0]
             steel_preds_zeroshot.extend(p_out.cpu().numpy().flatten())
 
-    unscaled_steel = np.array(steel_preds_zeroshot) * ti_ckpt["transformer_scaler_scale"][0] + ti_ckpt["transformer_scaler_mean"][0]
-    steel_pore_pred = np.clip(unscaled_steel, 0.0, None) ** 2
-    r2_zero_ti_on_steel = r2_score(merged_steel["pore%"].values, steel_pore_pred)
-    mae_zero_ti_on_steel = mean_absolute_error(merged_steel["pore%"].values, steel_pore_pred)
+    raw_steel = np.nan_to_num(np.array(steel_preds_zeroshot), nan=0.0, posinf=10.0, neginf=0.0)
+    unscaled_steel = raw_steel * ti_ckpt["transformer_scaler_scale"][0] + ti_ckpt["transformer_scaler_mean"][0]
+    steel_pore_pred = np.clip(unscaled_steel, 0.0, 10.0) ** 2
+    r2_zero_ti_on_steel = float(r2_score(merged_steel["pore%"].values, steel_pore_pred))
+    mae_zero_ti_on_steel = float(mean_absolute_error(merged_steel["pore%"].values, steel_pore_pred))
+    rho_zero_ti_on_steel, _ = stats.spearmanr(merged_steel["pore%"].values, steel_pore_pred)
 
-    print(f"Zero-Shot Transfer: Steel Model -> Ti-6Al-4V: R2 = {r2_zero_steel_on_ti:.4f}, MAE = {mae_zero_steel_on_ti:.4f}%")
-    print(f"Zero-Shot Transfer: Ti-6Al-4V Model -> Steel: R2 = {r2_zero_ti_on_steel:.4f}, MAE = {mae_zero_ti_on_steel:.4f}%")
+    print(f"Zero-Shot Transfer: Steel Model -> Ti-6Al-4V: R2 = {r2_zero_steel_on_ti:.4f}, MAE = {mae_zero_steel_on_ti:.4f}%, Spearman rho = {rho_zero_steel_on_ti:.4f}")
+    print(f"Zero-Shot Transfer: Ti-6Al-4V Model -> Steel: R2 = {r2_zero_ti_on_steel:.4f}, MAE = {mae_zero_ti_on_steel:.4f}%, Spearman rho = {rho_zero_ti_on_steel:.4f}")
 
     # -------------------------------------------------------------------------
     # STEP 4: Few-Shot Adaptation (10%, 25%, 50% data, 15 epochs)
@@ -313,6 +328,7 @@ def main():
                     p_out = ft_model(tr_tensors[idx_b].to(device)).squeeze()
                     l = crit_ft(p_out, tr_targets_scaled[idx_b].to(device))
                     l.backward()
+                    torch.nn.utils.clip_grad_norm_(ft_model.parameters(), max_norm=1.0)
                     opt_ft.step()
                 sched_ft.step()
 
@@ -321,13 +337,15 @@ def main():
             with torch.no_grad():
                 preds_val = []
                 for b in range(0, len(val_ti_tensors), 128):
-                    p_val = ft_model(val_ti_tensors[b : b + 128].to(device)).cpu().numpy().flatten()
+                    with torch.amp.autocast("cuda", enabled=False):
+                        p_val = ft_model(val_ti_tensors[b : b + 128].to(device).float()).cpu().numpy().flatten()
                     preds_val.extend(p_val)
 
-            unscaled_val = np.array(preds_val) * sc_ft.scale_[0] + sc_ft.mean_[0]
-            val_pore_pred = np.clip(unscaled_val, 0.0, None) ** 2
-            ft_r2 = r2_score(val_ti_targets, val_pore_pred)
-            ft_mae = mean_absolute_error(val_ti_targets, val_pore_pred)
+            raw_val = np.nan_to_num(np.array(preds_val), nan=0.0, posinf=10.0, neginf=0.0)
+            unscaled_val = raw_val * sc_ft.scale_[0] + sc_ft.mean_[0]
+            val_pore_pred = np.clip(unscaled_val, 0.0, 10.0) ** 2
+            ft_r2 = float(r2_score(val_ti_targets, val_pore_pred))
+            ft_mae = float(mean_absolute_error(val_ti_targets, val_pore_pred))
 
             adaptation_results.append({
                 "fraction": frac, "mode": mode,
@@ -444,3 +462,4 @@ To establish that the deep learning porosity estimator is a general physical voi
 
 if __name__ == "__main__":
     main()
+

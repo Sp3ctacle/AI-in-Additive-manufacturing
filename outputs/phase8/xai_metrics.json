@@ -1,0 +1,22 @@
+{
+  "gradcam": {
+    "target_layer": "backbone.conv_head",
+    "mean_enrichment": 4.150381287401467,
+    "median_enrichment": 3.3567035450035934,
+    "cascading_randomization": {
+      "rho_stage1_head": 0.4487175083785275,
+      "rho_stage2_head_conv": 0.18024912953728814,
+      "rho_stage3_whole": NaN,
+      "passed": false
+    },
+    "deletion_curve": {
+      "auc_targeted": 29.414212346076965,
+      "auc_random": 28.881706190109256,
+      "passed": false
+    }
+  },
+  "integrated_gradients": {
+    "median_completeness_ratio": 8.125711405469517,
+    "passed": false
+  }
+}

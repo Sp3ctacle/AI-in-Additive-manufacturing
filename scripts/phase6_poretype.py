@@ -180,8 +180,11 @@ def main():
     # ITEM 3(a): Tabular Baselines (Logistic Regression & Gradient Boosting)
     # -------------------------------------------------------------------------
     print("\n--- Item 3(a): Tabular Baselines on Provided Defect Features ---")
+    # Clean feature columns (handle European comma decimal formatting)
     feat_cols = ["solidity", "area", "defect_density", "perimeter", "mean_defect"]
-    X_tab = merged[feat_cols].values
+    for col in feat_cols:
+        merged[col] = merged[col].astype(str).str.replace(",", ".").astype(float)
+    X_tab = merged[feat_cols].values.astype(np.float32)
     y_true = merged["target_idx"].values
     folds_arr = merged["fold"].values
 
@@ -446,3 +449,4 @@ Pores in additive manufacturing stem from distinct physical defect mechanisms:
 
 if __name__ == "__main__":
     main()
+

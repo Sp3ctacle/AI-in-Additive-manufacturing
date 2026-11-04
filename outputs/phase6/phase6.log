@@ -1,0 +1,44 @@
+=== Running Phase 6: Pore-Type Classification (Defect Crops) ===
+Total labeled crops loaded: 1200 across 114 specimens.
+Class distribution:
+class_name
+Keyhole           400
+Lack_of_Fusion    400
+Process_Pores     400
+
+--- Item 2: Perceptual Hash Duplicate Audit (Hamming Distance <= 4) ---
+Total near-duplicate pairs (dist <= 4): 116026
+Near-duplicates residing in the exact SAME fold: 24532/116026 (21.1%)
+
+--- Item 3(a): Tabular Baselines on Provided Defect Features ---
+Traceback (most recent call last):
+  File "C:\Users\siddh\Downloads\Projects\sop project\scripts\phase6_poretype.py", line 448, in <module>
+    main()
+  File "C:\Users\siddh\Downloads\Projects\sop project\scripts\phase6_poretype.py", line 195, in main
+    X_tr_sc = scaler.fit_transform(X_tab[tr])
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\siddh\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\_set_output.py", line 327, in wrapped
+    data_to_wrap = f(self, X, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\siddh\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\base.py", line 969, in fit_transform
+    return self.fit(X, **fit_params).transform(X)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\siddh\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\preprocessing\_data.py", line 928, in fit
+    return self.partial_fit(X, y, sample_weight)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\siddh\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\base.py", line 1403, in wrapper
+    return fit_method(estimator, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\siddh\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\preprocessing\_data.py", line 965, in partial_fit
+    X = validate_data(
+        ^^^^^^^^^^^^^^
+  File "C:\Users\siddh\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\validation.py", line 3041, in validate_data
+    out = check_array(X, input_name="X", **check_params)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\siddh\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\validation.py", line 1038, in check_array
+    array = _asarray_with_order(array, order=order, dtype=dtype, xp=xp)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\siddh\AppData\Local\Programs\Python\Python311\Lib\site-packages\sklearn\utils\_array_api.py", line 983, in _asarray_with_order
+    array = numpy.asarray(array, order=order, dtype=dtype)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: could not convert string to float: '0,968479281912118'

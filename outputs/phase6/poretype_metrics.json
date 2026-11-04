@@ -1,0 +1,49 @@
+{
+  "tabular_baselines": {
+    "logistic_regression": {
+      "accuracy": 0.9725,
+      "macro_f1": 0.9724472620720251
+    },
+    "gradient_boosting": {
+      "accuracy": 0.9725,
+      "macro_f1": 0.9724996367136413
+    }
+  },
+  "cnn_classifier": {
+    "pooled_accuracy": 0.9775,
+    "pooled_macro_f1": 0.9774765240249889,
+    "per_class_recall": {
+      "Keyhole": 0.975,
+      "Lack_of_Fusion": 0.9625,
+      "Process_Pores": 0.995
+    },
+    "per_fold": {
+      "0": {
+        "accuracy": 0.946236559139785,
+        "macro_f1": 0.8923452166273639
+      },
+      "1": {
+        "accuracy": 0.991304347826087,
+        "macro_f1": 0.9933195795264761
+      },
+      "2": {
+        "accuracy": 0.9765100671140939,
+        "macro_f1": 0.9760473336406946
+      },
+      "3": {
+        "accuracy": 0.993485342019544,
+        "macro_f1": 0.9934056787989372
+      },
+      "4": {
+        "accuracy": 0.9761904761904762,
+        "macro_f1": 0.9782950432631328
+      }
+    }
+  },
+  "leakage_demonstration": {
+    "random_split_accuracy": 0.9683333333333334,
+    "random_split_macro_f1": 0.9683316457384062,
+    "accuracy_gap": -0.004166666666666652,
+    "f1_gap": -0.004167990975235014
+  }
+}

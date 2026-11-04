@@ -1,0 +1,101 @@
+=== Running Phase 5: Robustness Testing Across 12 Image Perturbations ===
+Device: cuda | Total tiles to evaluate per perturbation: 50,494
+
+--- Processing Fold 0/4 ---
+C:\Users\siddh\Downloads\Projects\sop project\scripts\phase5_robustness.py:200: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  ckpt = torch.load(str(ckpt_path), map_location="cpu")
+Loading 10138 validation tiles into memory...
+Loaded in 7.60s
+  [Fold 0] Evaluating condition: clean... done in 78.61s
+  [Fold 0] Evaluating condition: bright_0.7... done in 82.28s
+  [Fold 0] Evaluating condition: bright_0.8... done in 79.28s
+  [Fold 0] Evaluating condition: bright_1.2... done in 79.54s
+  [Fold 0] Evaluating condition: bright_1.3... done in 79.23s
+  [Fold 0] Evaluating condition: contrast_0.5... done in 112.32s
+  [Fold 0] Evaluating condition: contrast_1.5... done in 107.03s
+  [Fold 0] Evaluating condition: blur_1... done in 77.24s
+  [Fold 0] Evaluating condition: blur_2... done in 78.51s
+  [Fold 0] Evaluating condition: vignetting... done in 77.85s
+  [Fold 0] Evaluating condition: noise_10... done in 120.03s
+  [Fold 0] Evaluating condition: noise_20... done in 123.68s
+  [Fold 0] Evaluating condition: jpeg_50... done in 85.50s
+
+--- Processing Fold 1/4 ---
+Loading 10085 validation tiles into memory...
+Loaded in 7.33s
+  [Fold 1] Evaluating condition: clean... done in 75.78s
+  [Fold 1] Evaluating condition: bright_0.7... done in 82.12s
+  [Fold 1] Evaluating condition: bright_0.8... done in 78.65s
+  [Fold 1] Evaluating condition: bright_1.2... done in 78.70s
+  [Fold 1] Evaluating condition: bright_1.3... done in 77.50s
+  [Fold 1] Evaluating condition: contrast_0.5... done in 108.16s
+  [Fold 1] Evaluating condition: contrast_1.5... done in 113.33s
+  [Fold 1] Evaluating condition: blur_1... done in 78.26s
+  [Fold 1] Evaluating condition: blur_2... done in 77.81s
+  [Fold 1] Evaluating condition: vignetting... done in 80.74s
+  [Fold 1] Evaluating condition: noise_10... done in 127.94s
+  [Fold 1] Evaluating condition: noise_20... done in 127.90s
+  [Fold 1] Evaluating condition: jpeg_50... done in 86.26s
+
+--- Processing Fold 2/4 ---
+Loading 10110 validation tiles into memory...
+Loaded in 8.10s
+  [Fold 2] Evaluating condition: clean... done in 76.82s
+  [Fold 2] Evaluating condition: bright_0.7... done in 81.92s
+  [Fold 2] Evaluating condition: bright_0.8... done in 81.06s
+  [Fold 2] Evaluating condition: bright_1.2... done in 81.53s
+  [Fold 2] Evaluating condition: bright_1.3... done in 81.86s
+  [Fold 2] Evaluating condition: contrast_0.5... done in 112.98s
+  [Fold 2] Evaluating condition: contrast_1.5... done in 109.86s
+  [Fold 2] Evaluating condition: blur_1... done in 80.73s
+  [Fold 2] Evaluating condition: blur_2... done in 80.93s
+  [Fold 2] Evaluating condition: vignetting... done in 83.28s
+  [Fold 2] Evaluating condition: noise_10... done in 130.99s
+  [Fold 2] Evaluating condition: noise_20... done in 129.55s
+  [Fold 2] Evaluating condition: jpeg_50... done in 87.14s
+
+--- Processing Fold 3/4 ---
+Loading 10139 validation tiles into memory...
+Loaded in 7.47s
+  [Fold 3] Evaluating condition: clean... done in 77.01s
+  [Fold 3] Evaluating condition: bright_0.7... done in 82.13s
+  [Fold 3] Evaluating condition: bright_0.8... done in 81.52s
+  [Fold 3] Evaluating condition: bright_1.2... done in 81.82s
+  [Fold 3] Evaluating condition: bright_1.3... done in 82.35s
+  [Fold 3] Evaluating condition: contrast_0.5... done in 111.76s
+  [Fold 3] Evaluating condition: contrast_1.5... done in 109.78s
+  [Fold 3] Evaluating condition: blur_1... done in 80.48s
+  [Fold 3] Evaluating condition: blur_2... done in 80.10s
+  [Fold 3] Evaluating condition: vignetting... done in 82.63s
+  [Fold 3] Evaluating condition: noise_10... done in 130.63s
+  [Fold 3] Evaluating condition: noise_20... done in 131.91s
+  [Fold 3] Evaluating condition: jpeg_50... done in 86.96s
+
+--- Processing Fold 4/4 ---
+Loading 10022 validation tiles into memory...
+Loaded in 7.74s
+  [Fold 4] Evaluating condition: clean... done in 77.78s
+  [Fold 4] Evaluating condition: bright_0.7... done in 81.51s
+  [Fold 4] Evaluating condition: bright_0.8... done in 81.35s
+  [Fold 4] Evaluating condition: bright_1.2... done in 76.92s
+  [Fold 4] Evaluating condition: bright_1.3... done in 72.30s
+  [Fold 4] Evaluating condition: contrast_0.5... done in 93.46s
+  [Fold 4] Evaluating condition: contrast_1.5... done in 93.34s
+  [Fold 4] Evaluating condition: blur_1... done in 71.75s
+  [Fold 4] Evaluating condition: blur_2... done in 72.14s
+  [Fold 4] Evaluating condition: vignetting... done in 72.24s
+  [Fold 4] Evaluating condition: noise_10... done in 106.89s
+  [Fold 4] Evaluating condition: noise_20... done in 106.98s
+  [Fold 4] Evaluating condition: jpeg_50... done in 75.79s
+
+=== Aggregating Pooled OOF Predictions Across Folds ===
+
+### GATE 5 VERDICT:
+- **Perturbations where the CNN degrades LESS than the calibrated threshold (CNN superior):**
+  bright_0.7, bright_0.8, bright_1.2, bright_1.3, contrast_0.5, contrast_1.5, blur_1, vignetting, noise_10, noise_20, jpeg_50
+- **Perturbations where the Calibrated Threshold degrades LESS than the CNN (Threshold superior):**
+  blur_2
+
+Saved Phase 5 report to C:\Users\siddh\Downloads\Projects\sop project\outputs\phase5\phase5_report.md
+
+=== Phase 5 Completed Successfully ===
