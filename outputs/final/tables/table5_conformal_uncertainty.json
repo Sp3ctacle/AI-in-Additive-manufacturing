@@ -1,8 +1,4 @@
 {
-  "source_file": "outputs/phase10/uncertainty_metrics.json",
-  "spec_limits_evaluated": [
-    0.5,
-    1.0,
-    2.0
-  ]
+  "source_file": "outputs/phase10/part_porosity_uncertainty.csv",
+  "reference_used": "Optical ground-truth porosity label"
 }

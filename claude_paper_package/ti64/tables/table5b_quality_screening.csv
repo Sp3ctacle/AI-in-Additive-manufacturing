@@ -1,0 +1,4 @@
+Specification Limit (%),Total Parts,Accept Count,Reject Count,"Confusion Matrix [TN, FP, FN, TP]",Sensitivity on Rejects,Specificity,Balanced Accuracy,Borderline Error Rate (+/-0.2%),Borderline N
+0.5,734,152,582,"[143, 9, 3, 579]",0.9948,0.9408,0.9678,0.0769,65
+1.0,734,207,527,"[200, 7, 10, 517]",0.981,0.9662,0.9736,0.0517,58
+2.0,734,337,397,"[330, 7, 7, 390]",0.9824,0.9792,0.9808,0.1852,27

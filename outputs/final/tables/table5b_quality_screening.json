@@ -1,0 +1,4 @@
+{
+  "source_file": "outputs/phase10/part_porosity_uncertainty.csv",
+  "definition": "Reject if pore% > threshold"
+}

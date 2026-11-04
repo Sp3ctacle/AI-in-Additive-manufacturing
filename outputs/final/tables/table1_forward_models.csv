@@ -2,4 +2,4 @@ Model,Specimen R2,Specimen MAE (%),Tile R2,Tile MAE (%),Status
 Fair 256px Otsu Baseline,0.9973,0.2053,0.997,0.231,Classical Baseline
 ResNet-50,0.9961,0.2435,0.995,0.278,Deep CNN
 ConvNeXt-Tiny,0.9965,0.2312,0.9958,0.2541,Modern ConvNet
-EfficientNetV2-S (Proposed),0.9969,0.2106,0.9962,0.2425,Selected Architecture
+EfficientNetV2-S (Selected),0.9969,0.2106,0.9962,0.2425,Selected Architecture

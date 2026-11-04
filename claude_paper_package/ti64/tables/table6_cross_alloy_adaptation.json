@@ -1,0 +1,4 @@
+{
+  "source_file": "outputs/phase7/adaptation_control_results.csv",
+  "verdict": "Transfer not claimed (Steel pretraining does not beat ImageNet-init with CI > 0)"
+}

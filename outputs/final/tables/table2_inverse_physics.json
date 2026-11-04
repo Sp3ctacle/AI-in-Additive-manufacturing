@@ -1,3 +1,4 @@
 {
-  "source_file": "outputs/phase4/inverse_summary.json"
+  "source_file": "outputs/phase4/inverse_summary.json",
+  "model": "EfficientNetV2-S GroupKFold Out-of-Fold"
 }
