@@ -1,0 +1,40 @@
+specimen_id,filename,density_percent,E_d_J_mm3,Laser_Power_W,Scan_Speed_mm_s,Hatch_Distance_mm,Layer_Thickness_mm,exclusion_reason
+110,110.jpg,38.739,15.07332657,73,1232,0.15724,0.025,Severe lack-of-fusion (ED < 33 J/mm^3); specimen fractured into disjoint porous islands smaller than 200 um erosion
+116,116_2.jpg,46.971,14.94500239,76,1558,0.13056,0.025,Severe lack-of-fusion (ED < 33 J/mm^3); specimen fractured into disjoint porous islands smaller than 200 um erosion
+145,145.jpg,34.532,30.4996776,55,977,0.07383,0.025,Severe lack-of-fusion (ED < 33 J/mm^3); specimen fractured into disjoint porous islands smaller than 200 um erosion
+177,177_2.jpg,42.758,14.83244109,77,1166,0.17809,0.025,Severe lack-of-fusion (ED < 33 J/mm^3); specimen fractured into disjoint porous islands smaller than 200 um erosion
+183,183_2.jpg,42.231,14.64657436,77,1058,0.19876,0.025,Severe lack-of-fusion (ED < 33 J/mm^3); specimen fractured into disjoint porous islands smaller than 200 um erosion
+190,190.jpg,39.375,32.86519912,52,451,0.14033,0.025,Severe lack-of-fusion (ED < 33 J/mm^3); specimen fractured into disjoint porous islands smaller than 200 um erosion
+225,225.jpg,55.245,9.96404309,90,1631,0.11076,0.05,Irregular specimen cross-section geometry; eroded boundary left fewer than 1 full 1024x1024 tile >= 98% inside
+235,235_2.jpg,21.729,19.87320893,59,531,0.11182,0.05,Severe lack-of-fusion (ED < 33 J/mm^3); specimen fractured into disjoint porous islands smaller than 200 um erosion
+240,240_2.jpg,47.278,13.45094843,80,868,0.13704,0.05,Severe lack-of-fusion (ED < 33 J/mm^3); specimen fractured into disjoint porous islands smaller than 200 um erosion
+275,275.jpg,37.082,17.03308298,63,371,0.19939,0.05,Severe lack-of-fusion (ED < 33 J/mm^3); specimen fractured into disjoint porous islands smaller than 200 um erosion
+280,280.jpg,49.384,10.66760948,84,1536,0.10253,0.05,Severe lack-of-fusion (ED < 33 J/mm^3); specimen fractured into disjoint porous islands smaller than 200 um erosion
+302,302.jpg,52.38,12.03537878,92,926,0.1651,0.05,Severe lack-of-fusion (ED < 33 J/mm^3); specimen fractured into disjoint porous islands smaller than 200 um erosion
+329,329_2.jpg,,18.0689094,60,613,0.10834,0.05,Extreme porosity / specimen crumbled during Archimedes density testing; porous network fragmented
+350,350.jpg,53.26,18.85880989,65,697,0.0989,0.05,Severe lack-of-fusion (ED < 33 J/mm^3); specimen fractured into disjoint porous islands smaller than 200 um erosion
+438,438.jpg,49.138,7.58411702,134,1615,0.14587,0.075,Severe lack-of-fusion (ED < 33 J/mm^3); specimen fractured into disjoint porous islands smaller than 200 um erosion
+451,451_2.jpg,51.564,10.46359981,94,1076,0.11132,0.075,Severe lack-of-fusion (ED < 33 J/mm^3); specimen fractured into disjoint porous islands smaller than 200 um erosion
+453,453_2.jpg,43.429,10.18477846,91,661,0.18023,0.075,Severe lack-of-fusion (ED < 33 J/mm^3); specimen fractured into disjoint porous islands smaller than 200 um erosion
+455,455.jpg,47.647,8.665384551,120,1466,0.12595,0.075,Severe lack-of-fusion (ED < 33 J/mm^3); specimen fractured into disjoint porous islands smaller than 200 um erosion
+461,461.jpg,51.193,10.10789349,110,867,0.16736,0.075,Severe lack-of-fusion (ED < 33 J/mm^3); specimen fractured into disjoint porous islands smaller than 200 um erosion
+481,481.jpg,42.917,8.761751403,111,968,0.1745,0.075,Severe lack-of-fusion (ED < 33 J/mm^3); specimen fractured into disjoint porous islands smaller than 200 um erosion
+482,482.jpg,49.321,8.601149593,132,1601,0.12781,0.075,Severe lack-of-fusion (ED < 33 J/mm^3); specimen fractured into disjoint porous islands smaller than 200 um erosion
+504,504.jpg,59.927,8.18760576,130,1453,0.1457,0.075,Irregular specimen cross-section geometry; eroded boundary left fewer than 1 full 1024x1024 tile >= 98% inside
+508,508.jpg,78.561,9.374237516,124,1190,0.14821,0.075,Irregular specimen cross-section geometry; eroded boundary left fewer than 1 full 1024x1024 tile >= 98% inside
+517,517.jpg,67.737,10.48726109,112,1274,0.11177,0.075,Irregular specimen cross-section geometry; eroded boundary left fewer than 1 full 1024x1024 tile >= 98% inside
+527,527.jpg,72.653,7.861466664,154,1680,0.15547,0.075,Irregular specimen cross-section geometry; eroded boundary left fewer than 1 full 1024x1024 tile >= 98% inside
+587,587.jpg,65.379,8.045363473,143,1355,0.1749,0.075,Irregular specimen cross-section geometry; eroded boundary left fewer than 1 full 1024x1024 tile >= 98% inside
+609,609.jpg,99.828,7.426479688,139,1655,0.15079,0.075,Irregular specimen cross-section geometry; eroded boundary left fewer than 1 full 1024x1024 tile >= 98% inside
+618,618_2.jpg,44.82,9.692849746,96,1072,0.09239,0.1,Severe lack-of-fusion (ED < 33 J/mm^3); specimen fractured into disjoint porous islands smaller than 200 um erosion
+645,645_2.jpg,63.585,10.05100072,93,1330,0.06957,0.1,Irregular specimen cross-section geometry; eroded boundary left fewer than 1 full 1024x1024 tile >= 98% inside
+648,648_2.jpg,68.442,8.590823214,125,1526,0.09535,0.1,Irregular specimen cross-section geometry; eroded boundary left fewer than 1 full 1024x1024 tile >= 98% inside
+664,664.jpg,50.603,10.7444786,85,1504,0.0526,0.1,Severe lack-of-fusion (ED < 33 J/mm^3); specimen fractured into disjoint porous islands smaller than 200 um erosion
+692,692.jpg,79.884,8.555788857,128,1407,0.10633,0.1,Irregular specimen cross-section geometry; eroded boundary left fewer than 1 full 1024x1024 tile >= 98% inside
+696,696.jpg,65.356,7.482798515,163,1143,0.19058,0.1,Irregular specimen cross-section geometry; eroded boundary left fewer than 1 full 1024x1024 tile >= 98% inside
+719,719.jpg,43.989,8.311455008,114,1645,0.08338,0.1,Severe lack-of-fusion (ED < 33 J/mm^3); specimen fractured into disjoint porous islands smaller than 200 um erosion
+728,728.jpg,78.016,7.353282523,166,1446,0.15612,0.1,Irregular specimen cross-section geometry; eroded boundary left fewer than 1 full 1024x1024 tile >= 98% inside
+730,730.jpg,65.617,10.32347486,115,588,0.18945,0.1,Irregular specimen cross-section geometry; eroded boundary left fewer than 1 full 1024x1024 tile >= 98% inside
+742,742.jpg,33.884,6.737958408,141,1330,0.15734,0.1,Severe lack-of-fusion (ED < 33 J/mm^3); specimen fractured into disjoint porous islands smaller than 200 um erosion
+784,784.jpg,52.879,7.11451864,221,1640,0.18941,0.1,Severe lack-of-fusion (ED < 33 J/mm^3); specimen fractured into disjoint porous islands smaller than 200 um erosion
+803,803.jpg,99.578,8.678325459,121,1389,0.10038,0.1,Irregular specimen cross-section geometry; eroded boundary left fewer than 1 full 1024x1024 tile >= 98% inside

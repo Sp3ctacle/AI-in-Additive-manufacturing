@@ -1,0 +1,184 @@
+{
+  "metadata": {
+    "title": "Machine Learning for Defect Diagnostics and Quality Assurance in Laser Powder Bed Fusion Ti-6Al-4V",
+    "material": "Ti-6Al-4V Grade 5 (Titanium Alloy)",
+    "machine": "SLM 125 HL (SLM Solutions Group AG)",
+    "spot_size_um": 66.0,
+    "primary_dataset_doi": "10.5281/zenodo.8303011",
+    "transfer_source_alloy": "AISI 316L Austenitic Stainless Steel (EOS M 290)",
+    "pixel_scale_um_per_px": 0.55812,
+    "folds_sha256": "b8cb074373f890b7a024dfa0cc8ad155f30d23f43663ce79af6967f5b5762792",
+    "governance_rules": "Strict adherence to Global Rules A1-A16 and Gate Fix-Ups F1-F8"
+  },
+  "gates": [
+    {
+      "gate": "Gate 0",
+      "phase": "Phase 0: Verification & Inventory",
+      "hypothesis": "Archives, metadata, and physical scale are verifiable and error-free",
+      "test_executed_correctly": true,
+      "hypothesis_supported": true,
+      "evidence": "11/11 archives verified (0 corrupt); 773 specimens linked; absolute scale 0.55812 um/px verified; Ed energy identity confirmed analytically across all rows."
+    },
+    {
+      "gate": "Gate 1",
+      "phase": "Phase 1: Panoramic Tiling & Illumination",
+      "hypothesis": "Multi-scale panoramic tiling preserves void fraction without resin border contamination",
+      "test_executed_correctly": true,
+      "hypothesis_supported": true,
+      "evidence": "50,494 tiles extracted across 734 specimens; 200 um absolute margin isolates mount resin; Nyquist criteria satisfied (keyhole 5th pctile = 13.5 net px >= 3)."
+    },
+    {
+      "gate": "Gate 1b",
+      "phase": "Phase 1b: Extreme QC & Specimen Audit",
+      "hypothesis": "Automated QC isolates mosaic seams and explains all missing specimen exclusions",
+      "test_executed_correctly": true,
+      "hypothesis_supported": true,
+      "evidence": "0.0% error rate on 50 extreme tiles; 39 crumbling LOF specimens (Ed ~10 J/mm3, density ~50.9%) safely isolated from training cohort to prevent resin seepage."
+    },
+    {
+      "gate": "Gate 2",
+      "phase": "Phase 2: CV Splits & Baseline Models",
+      "hypothesis": "Disjoint specimen grouping prevents leakage; optical porosity correlates with Archimedes density",
+      "test_executed_correctly": true,
+      "hypothesis_supported": true,
+      "evidence": "GroupKFold strictly disjoint (0 specimen overlap); optical vs Archimedes Pearson r = 0.8573; baseline Otsu specimen R2 = 0.9733, MAE = 0.6314%; leakage penalty dR2 = +0.0349."
+    },
+    {
+      "gate": "Gate 3",
+      "phase": "Phase 3: Forward Porosity CNN",
+      "hypothesis": "Deep vision backbones predict optical porosity from unsegmented grayscale tiles",
+      "test_executed_correctly": true,
+      "hypothesis_supported": true,
+      "evidence": "Area-weighted Specimen R2 = 0.9969 [0.9957, 0.9979], MAE = 0.2106% [0.174%, 0.248%]; Log count R2 = 0.9974."
+    },
+    {
+      "gate": "Gate 3b",
+      "phase": "Phase 3b: Fair Classical Baseline",
+      "hypothesis": "Deep CNN outperforms a fair, like-for-like 256px Otsu baseline at the specimen level",
+      "test_executed_correctly": true,
+      "hypothesis_supported": false,
+      "verdict_detail": "STATISTICAL PARITY (Rule A9)",
+      "evidence": "Paired dMAE (baseline - CNN) = -0.0054% [95% CI: -0.0415%, +0.0280%]. CI strictly includes zero, demonstrating statistical equivalence on clean brightfield micrographs."
+    },
+    {
+      "gate": "Gate 4",
+      "phase": "Phase 4: Inverse Physics Regression",
+      "hypothesis": "Microstructural visual features invert process parameters (Ed, P, v, h, t, dH/hs)",
+      "test_executed_correctly": true,
+      "hypothesis_supported": true,
+      "evidence": "Specimen Ed R2 = 0.6053 (MAE 15.3905 J/mm3); dH/hs R2 = 0.8058 (MAE 2.3831); P R2 = 0.5924 (MAE 40.6812 W); v R2 = 0.5344 (MAE 218.6236 mm/s); h R2 = 0.5239 (MAE 0.0232 mm); t R2 = 0.5934 (MAE 0.0143 mm)."
+    },
+    {
+      "gate": "Gate 4b",
+      "phase": "Phase 4b: Hardware Calibration & Beyond-Porosity",
+      "hypothesis": "Hatch spacing h creates spatial periodicity in LOF voids beyond scalar pore metrics",
+      "test_executed_correctly": true,
+      "hypothesis_supported": true,
+      "evidence": "CNN beats 8-feature Extra Trees (dMAE = +2.84 J/mm3 [+2.13, +3.51]); hatch pitch detected in 19.75% of LOF specimens (p < 0.0001 vs 12.03% null). Section confirmed as horizontal xy."
+    },
+    {
+      "gate": "Gate 5",
+      "phase": "Phase 5: Optical Sensor Robustness",
+      "hypothesis": "CNN preserves calibration under synthetic perturbations better than thresholding",
+      "test_executed_correctly": true,
+      "hypothesis_supported": true,
+      "evidence": "CNN wins 10 of 12 synthetic perturbations; Fair Otsu wins 1 (contrast_0.5); 1 tie (clean, CI includes 0); 1 both fail (noise_20, both R2 < 0.5)."
+    },
+    {
+      "gate": "Gate 6",
+      "phase": "Phase 6: Defect Morphology Classification",
+      "hypothesis": "CNN classifies pore root causes (validated on crops only) better than tabular shape classifiers",
+      "test_executed_correctly": true,
+      "hypothesis_supported": false,
+      "verdict_detail": "MATCHES TABULAR (Rule A9)",
+      "evidence": "Validated on crops only (1,200 curated defect crops). CNN matches tabular shape classifiers (97.75% vs 97.25%, McNemar test p = 0.3616, n.s.). Random split leaks +0.42% accuracy."
+    },
+    {
+      "gate": "Gate 7",
+      "phase": "Phase 7: Cross-Alloy Domain Transfer",
+      "hypothesis": "Pretraining on 316L stainless steel transfers zero-shot and beats ImageNet initialization",
+      "test_executed_correctly": true,
+      "hypothesis_supported": false,
+      "verdict_detail": "TRANSFER FALSIFIED (Rule A10)",
+      "evidence": "Primary zero-shot: Unclipped R2 = -19.6691 (MAE = 24.3622%); secondary clipped R2 = -6.4366 (MAE = 23.4069%). Controlled adaptation matches ImageNet (R2 ~0.85 vs 0.87). Transfer NOT claimed."
+    },
+    {
+      "gate": "Gate 8",
+      "phase": "Phase 8: Explainability & Deletion Faithfulness",
+      "hypothesis": "Grad-CAM saliency heatmaps are faithful to CNN decision logic under progressive pixel deletion",
+      "test_executed_correctly": true,
+      "hypothesis_supported": false,
+      "verdict_detail": "FAITHFULNESS FALSIFIED (Rule A13)",
+      "evidence": "Grad-CAM is pore-grounded (3.36x enrichment), but targeted deletion fails to drop prediction faster than random (dAUC = -4.4573 [-5.9857, -2.9267]). Integrated Gradients rejected (axiom violation ratio 8.13 > 0.05)."
+    },
+    {
+      "gate": "Gate 10",
+      "phase": "Phase 10: Porosity & Defect Assessment",
+      "hypothesis": "Conformal prediction delivers >= 90% valid coverage and parts quality screening",
+      "test_executed_correctly": true,
+      "hypothesis_supported": true,
+      "evidence": "Split conformal coverage = 91.96% (within 88-92% window of 90%; mean width 1.3930%); screening accuracy at 0.5% limit is 96.78% (94.08% specificity, 99.48% sensitivity on rejects). Defect classification validated on crops only. Gumbel fits stratified by Ed tertile."
+    },
+    {
+      "gate": "Gate 9",
+      "phase": "Phase 9: Consolidation & Audit Verification",
+      "hypothesis": "All reported metrics are traceable to JSON/CSV data; figures at 300 DPI; 100% regex match",
+      "test_executed_correctly": true,
+      "hypothesis_supported": true,
+      "evidence": "All 16 consistency checks verified to 4-decimal exact match; 100% of 552 decimal numbers in reports and tables verified against source artifacts (tol < 1e-4)."
+    }
+  ],
+  "gumbel_specimen_tertiles": [
+    {
+      "regime": "Low E_d (Lack of Fusion)",
+      "n_specimens": 241,
+      "ed_min_j_mm3": 8.278655773,
+      "ed_max_j_mm3": 28.19222762,
+      "mu_median_um": 61.10786390305195,
+      "mu_mean_um": 78.3114182713785,
+      "mu_iqr_low_um": 24.047175481354845,
+      "mu_iqr_high_um": 119.44401975611427,
+      "beta_median_um": 28.452119082943113,
+      "beta_mean_um": 30.62713665103772,
+      "beta_iqr_low_um": 13.81905274362015,
+      "beta_iqr_high_um": 44.75648909602653,
+      "qq_corr_median": 0.9843822722444872,
+      "qq_corr_mean": 0.9435559826123268,
+      "ad_pass_rate_5pct": 0.6970954356846473
+    },
+    {
+      "regime": "Mid E_d (Conduction)",
+      "n_specimens": 240,
+      "ed_min_j_mm3": 28.20397112,
+      "ed_max_j_mm3": 55.82811086,
+      "mu_median_um": 16.645081993807562,
+      "mu_mean_um": 24.87357559174712,
+      "mu_iqr_low_um": 7.808651888509285,
+      "mu_iqr_high_um": 34.55541869583985,
+      "beta_median_um": 10.273434104796802,
+      "beta_mean_um": 14.343999947207072,
+      "beta_iqr_low_um": 7.4614298515555895,
+      "beta_iqr_high_um": 15.113164456542929,
+      "qq_corr_median": 0.9577277157338191,
+      "qq_corr_mean": 0.8681473251829317,
+      "ad_pass_rate_5pct": 0.3625
+    },
+    {
+      "regime": "High E_d (Keyholing)",
+      "n_specimens": 240,
+      "ed_min_j_mm3": 56.11935601,
+      "ed_max_j_mm3": 191.6750848,
+      "mu_median_um": 24.11452965875258,
+      "mu_mean_um": 23.423197339319078,
+      "mu_iqr_low_um": 7.215425522378856,
+      "mu_iqr_high_um": 36.06409642526896,
+      "beta_median_um": 10.502071036022489,
+      "beta_mean_um": 12.676295640635008,
+      "beta_iqr_low_um": 7.783235793987838,
+      "beta_iqr_high_um": 14.658088356639965,
+      "qq_corr_median": 0.971548791886812,
+      "qq_corr_mean": 0.8756556163892865,
+      "ad_pass_rate_5pct": 0.45
+    }
+  ]
+}

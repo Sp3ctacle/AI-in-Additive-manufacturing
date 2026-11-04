@@ -1,0 +1,105 @@
+{
+  "conformal_prediction": {
+    "target_coverage": 0.9,
+    "empirical_coverage_overall": 0.9196185286103542,
+    "empirical_coverage_low_density_stratum": 0.9335548172757475,
+    "empirical_coverage_high_density_stratum": 0.9099307159353349,
+    "mean_interval_width_overall": 1.392958164215088,
+    "mean_interval_width_low_density": 1.4902396202087402,
+    "mean_interval_width_high_density": 1.3253328800201416,
+    "gate10_coverage_criterion_passed": true
+  },
+  "accept_reject_classification": {
+    "limit_0_5": {
+      "spec_limit_pct": 0.5,
+      "accuracy": 0.9836512261580381,
+      "sensitivity": 0.9407894736842105,
+      "specificity": 0.9948453608247423,
+      "precision": 0.9794520547945206,
+      "confusion_matrix": {
+        "TP": 143,
+        "FP": 3,
+        "TN": 579,
+        "FN": 9
+      },
+      "per_fold_accuracy": [
+        0.9727891156462585,
+        0.972972972972973,
+        0.9727891156462585,
+        1.0,
+        1.0
+      ]
+    },
+    "limit_1_0": {
+      "spec_limit_pct": 1.0,
+      "accuracy": 0.9768392370572208,
+      "sensitivity": 0.966183574879227,
+      "specificity": 0.9810246679316889,
+      "precision": 0.9523809523809523,
+      "confusion_matrix": {
+        "TP": 200,
+        "FP": 10,
+        "TN": 517,
+        "FN": 7
+      },
+      "per_fold_accuracy": [
+        0.9795918367346939,
+        0.972972972972973,
+        0.9727891156462585,
+        0.9931972789115646,
+        0.9655172413793104
+      ]
+    },
+    "limit_2_0": {
+      "spec_limit_pct": 2.0,
+      "accuracy": 0.9809264305177112,
+      "sensitivity": 0.9792284866468842,
+      "specificity": 0.982367758186398,
+      "precision": 0.9792284866468842,
+      "confusion_matrix": {
+        "TP": 330,
+        "FP": 7,
+        "TN": 390,
+        "FN": 7
+      },
+      "per_fold_accuracy": [
+        0.9795918367346939,
+        0.9864864864864865,
+        0.9727891156462585,
+        0.9863945578231292,
+        0.9793103448275862
+      ]
+    }
+  },
+  "archimedes_agreement": {
+    "raw_r2": 0.7125655928950574,
+    "raw_mae": 2.7296720667926326,
+    "raw_spearman_rho": 0.6324565290499684,
+    "calibrated_r2": 0.727399650201733,
+    "calibrated_mae": 2.71450520528859,
+    "calibrated_spearman_rho": 0.6139403712472116,
+    "stratum_low_density_spearman_rho": 0.8157736179584824,
+    "stratum_high_density_spearman_rho": 0.12586815071974156
+  },
+  "defect_classification_validation": {
+    "crops_accuracy": 0.9775,
+    "crops_macro_f1": 0.9774765240249889,
+    "gate10_validation_crops_passed": true
+  },
+  "extreme_value_statistics": {
+    "spearman_rho_optical_porosity": 0.6312548026448203,
+    "spearman_rho_energy_density": -0.3369659491202052,
+    "tile_max_sqrt_area_r2": 0.13408644586568064,
+    "tile_max_sqrt_area_mae_um": 129.66084258258013
+  },
+  "tool_validation": {
+    "five_specimens_match_oof": true,
+    "runtime_gpu_seconds": 0.85,
+    "runtime_cpu_seconds": 4.2
+  },
+  "out_of_domain_flags_count": 0,
+  "gate10_overall_verdict": {
+    "test_executed_correctly": true,
+    "hypothesis_supported": true
+  }
+}

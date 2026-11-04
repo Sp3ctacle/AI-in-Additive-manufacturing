@@ -30,6 +30,10 @@ outputs/**/*.npy
 !outputs/**/*.json
 !outputs/**/*.md
 
+# Allow all files in publication package
+!claude_paper_package/**
+!claude_paper_package/**/*.png
+
 # System & IDE
 .vscode/
 .idea/
