@@ -54,8 +54,21 @@ logging.basicConfig(
 logger = logging.getLogger("phase1")
 
 
-def load_cleaned_parameters(csv_path="data/ti64_raw/Parameter_Combinations.csv"):
+def load_cleaned_parameters(csv_path=None):
     """Load and cleanly parse Parameter_Combinations.csv."""
+    if csv_path is None:
+        candidates = [
+            repo_root / "data" / "ti64" / "Parameter_Combinations.csv",
+            repo_root / "data" / "New_images" / "Parameter_Combinations.csv",
+            repo_root / "data" / "Parameter_Combinations.csv",
+            repo_root / "data" / "ti64_raw" / "Parameter_Combinations.csv",
+        ]
+        for c in candidates:
+            if c.exists():
+                csv_path = c
+                break
+        if csv_path is None:
+            csv_path = candidates[0]
     df = pd.read_csv(csv_path, sep=';')
     clean_cols = {}
     for col in df.columns:

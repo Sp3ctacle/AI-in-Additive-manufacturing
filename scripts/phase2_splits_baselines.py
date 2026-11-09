@@ -210,7 +210,12 @@ def step1_generate_folds(df_tiles: pd.DataFrame, out_dir: Path) -> Dict[str, Any
     if missing_specs:
         logger.info(f"Assigning {len(missing_specs)} missing micrograph specimens deterministically to folds...")
         # Get E_d for missing specimens from Parameter_Combinations.csv
-        params_df = pd.read_csv(repo_root / "data" / "ti64_raw" / "Parameter_Combinations.csv", sep=';')
+        params_path = repo_root / "data" / "ti64" / "Parameter_Combinations.csv"
+        if not params_path.exists():
+            params_path = repo_root / "data" / "New_images" / "Parameter_Combinations.csv"
+        if not params_path.exists():
+            params_path = repo_root / "data" / "Parameter_Combinations.csv"
+        params_df = pd.read_csv(params_path, sep=';')
         params_df['Index'] = params_df['Index'].astype(int)
         params_df['ED_clean'] = pd.to_numeric(params_df['ED'].astype(str).str.replace(' ', '').str.replace(',', '.'), errors='coerce')
         miss_df = params_df[params_df['Index'].isin(missing_specs)].copy()

@@ -366,7 +366,11 @@ def check_item3_missing_specimens(out_dir: Path):
     missing_csv = out_dir / "missing_specimens.csv"
     manifest = pd.read_csv(repo_root / "outputs" / "phase0" / "manifest.csv")
     tiles_df = pd.read_csv(repo_root / "outputs" / "phase1" / "tiles_index.csv")
-    params_csv = repo_root / "data" / "ti64_raw" / "Parameter_Combinations.csv"
+    params_csv = repo_root / "data" / "ti64" / "Parameter_Combinations.csv"
+    if not params_csv.exists():
+        params_csv = repo_root / "data" / "New_images" / "Parameter_Combinations.csv"
+    if not params_csv.exists():
+        params_csv = repo_root / "data" / "Parameter_Combinations.csv"
     df_p = pd.read_csv(params_csv, sep=';')
     df_p['Index'] = df_p['Index'].astype(int)
     df_p['Density_clean'] = pd.to_numeric(df_p['Density'].astype(str).str.replace(' ', '').str.replace(',', '.'), errors='coerce')
